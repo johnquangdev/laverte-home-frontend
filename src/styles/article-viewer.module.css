@@ -1,0 +1,174 @@
+.articleViewer {  
+  font-size: 16px;
+  color: var(--color-foreground);
+}
+
+.articleViewer :where(h1) {
+  font-family: var(--font-playfair), serif;
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-primary);
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.articleViewer :where(h1:first-child) {
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .articleViewer :where(h1) {
+    font-size: 2.5rem;
+  }
+}
+
+.articleViewer :where(h2) {
+  font-family: var(--font-playfair), serif;
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-align: center;
+  color: var(--color-primary);
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.articleViewer :where(h2:first-child) {
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .articleViewer :where(h2) {
+    font-size: 2.5rem;
+  }
+}
+
+.articleViewer :where(h3) {
+  font-family: var(--font-playfair), serif;
+  font-weight: 400;
+  font-size: 1.75rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-primary);
+  margin-top: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.articleViewer :where(h3:first-child) {
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .articleViewer :where(h3) {
+    font-size: 2rem;
+  }
+}
+
+.articleViewer :where(h4) {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .articleViewer :where(h4) {
+    font-size: 0.8125rem;
+  }
+}
+
+.articleViewer :where(p) {
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--color-gray);
+}
+
+@media (min-width: 640px) {
+  .articleViewer :where(p) {
+    font-size: 1rem;
+  }
+}
+
+.articleViewer :where(ul) {
+  margin: 0.75rem 0;
+  padding-left: 1.25rem;
+  list-style-type: disc;
+  list-style-position: outside;
+}
+
+.articleViewer :where(ol) {
+  margin: 0.75rem 0;
+  padding-left: 1.25rem;
+  list-style-position: outside;
+}
+
+.articleViewer :where(li) {
+  font-family: var(--font-montserrat), sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--color-gray);
+  margin: 0.375rem 0;
+}
+
+.articleViewer :where(li)::marker {
+  color: var(--color-gray);
+}
+
+.articleViewer :where(pre) {
+  background-color: var(--color-background-2);
+  border: 1px solid var(--color-beige);
+  border-radius: 0;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.articleViewer :where(pre code) {
+  background-color: transparent;
+  color: var(--color-foreground);
+  padding: 0;
+  border: none;
+  font-size: inherit;
+}
+
+.articleViewer :where(code) {
+  background-color: var(--color-background-2);
+  color: var(--color-primary);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.875em;
+}
+
+.articleViewer :where(code)::before,
+.articleViewer :where(code)::after {
+  content: none;
+  display: none;
+}
+
+.articleViewer :where(img) {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+}
+
+.articleViewer :where(strong),
+.articleViewer :where(b) {
+  font-family: var(--font-playfair), serif;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-primary);
+}

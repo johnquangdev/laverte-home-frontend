@@ -1,0 +1,15 @@
+@keyframes animateQuizQuestionFade {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quizQuestionFade {
+  animation: animateQuizQuestionFade 0.5s ease;
+}

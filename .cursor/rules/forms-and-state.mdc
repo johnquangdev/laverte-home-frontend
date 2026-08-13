@@ -1,0 +1,41 @@
+---
+description: Form RHF + Zod, validation tiếng Việt và Zustand
+globs: src/{hooks/forms,stores,components/molecules/forms}/**/*
+alwaysApply: false
+---
+
+# Forms & state
+
+## Form (react-hook-form + Zod)
+
+- Schema Zod export cùng hook hoặc file schema riêng cạnh hook (`hooks/forms/order.ts`).
+- Message validation **tiếng Việt**, cụ thể theo field.
+- `zodResolver` từ `@hookform/resolvers/zod`.
+- `defaultValues` đầy đủ để tránh uncontrolled warning.
+
+```typescript
+export const orderFormSchema = z.object({
+  fullName: z.string().min(1, "Họ và tên là bắt buộc"),
+  phone: z.string().regex(/^[0-9]{10,11}$/, "Số điện thoại không hợp lệ"),
+});
+export type OrderFormData = z.infer<typeof orderFormSchema>;
+```
+
+- UI form: `components/molecules/forms/` — wire `register` / `control` từ hook `useXxxForm`.
+- Select địa giới hành: atoms `select-provinces`, `select-districts`, `select-wards` + hooks `hooks/queries/administrative/`.
+
+## Submit
+
+- `onSubmit` async; disable nút khi `isSubmitting` / `loading` trên `Button`.
+- POST order/quiz: mutation hook → BFF — không gọi `httpClient` từ component.
+
+## Zustand
+
+- Store tại `src/stores/` — ví dụ `bill.ts` cho giỏ / đơn tạm.
+- Chỉ state cần chia sẻ nhiều organism (cart, header badge).
+- Không thay React Query cache bằng Zustand cho server data.
+
+## UI form primitives
+
+- Dùng `components/ui/field`, `label`, `textarea`, `select`, `autocomplete` — giữ accessibility Radix.
+- Hiển thị lỗi từ `formState.errors` gần field tương ứng.

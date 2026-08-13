@@ -1,0 +1,49 @@
+---
+description: Tailwind v4, design tokens và typography Guscent
+globs: "**/*.{tsx,css}"
+alwaysApply: false
+---
+
+# Styling
+
+## Tailwind CSS v4
+
+- Entry: `src/styles/globals.css` — `@import "tailwindcss"`, `@plugin "@tailwindcss/typography"`.
+- Token màu/font: block `@theme inline` — dùng class như `bg-primary`, `text-background-2`, `bg-background-1`.
+- **Không hardcode hex** ngoài `globals.css`.
+
+| Token | Hex | Ý nghĩa |
+|-------|-----|---------|
+| `black` / `foreground` | `#1C1C1C` | Chữ chính, nút primary DS |
+| `primary` | `#4A3C31` | Brand brown — nút secondary DS |
+| `secondary` | `#C5A070` | Accent tan — hover link, scrollbar |
+| `background-1` | `#F9F5F0` | Nền body / section sáng |
+| `background-2` | `#EFE6DB` | Footer, panel phụ |
+| `gray`, `brown`, `beige` | — | Neutral / decorative |
+
+- Font: `font-montserrat` (body), `font-playfair` (heading brand) — biến CSS từ `next/font` trong root layout.
+
+## Button (`src/components/atoms/button.tsx`)
+
+- Default `shape="pill"` (`rounded-full`).
+- Variants: `primary` (bg-black), `secondary` (bg-primary), `outline`, `dark-outline`, `text`.
+- CTA chính → `primary`; CTA brand nâu → `secondary`; nút phụ / ghost → `outline`.
+
+## Class names
+
+- Gộp điều kiện: `cn("base", condition && "extra", className)` từ `@/utils/common`.
+- ESLint `eslint-plugin-tailwindcss` bật: thứ tự class, shorthand, không contradict — chạy `pnpm lint` để sửa warn.
+
+## Layout responsive
+
+- Mobile-first: `sm:`, `lg:` breakpoints như code hiện có.
+- Container: component `Container` atom khi cần max-width đồng nhất.
+
+## Ảnh & media
+
+- `next/image` với `sizes` hợp lý; CDN Guscent đã allow trong config.
+
+## Không làm
+
+- Không thêm file CSS module trừ khi pattern repo đã có (repo dùng chủ yếu Tailwind utility).
+- Không hard-code hex lặp lại — dùng token `@theme` hoặc class semantic đã định nghĩa.

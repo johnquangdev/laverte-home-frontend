@@ -1,0 +1,19 @@
+# Package Manager Usage
+
+## Preferred Tool
+
+- Use `pnpm` for all package management tasks (installing dependencies, running scripts, etc.).
+- Do **not** use `npm`, `yarn`, or other package managers unless explicitly instructed otherwise.
+
+## Common Commands
+
+- Install dependencies: `pnpm install`
+- Add a dependency: `pnpm add <package>`
+- Add a dev dependency: `pnpm add -D <package>`
+- Remove a dependency: `pnpm remove <package>`
+- Run project scripts: `pnpm <script-name>` (e.g., `pnpm lint`, `pnpm dev`)
+
+## Notes
+
+- Ensure the lockfile remains consistent (`pnpm-lock.yaml`).
+- If a command from documentation uses `npm` or `yarn`, translate it to the equivalent `pnpm` command before running.

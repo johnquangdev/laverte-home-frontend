@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  stark-frontend-dev:
+    image: ghcr.io/sfastvn/stark-frontend:develop
+    container_name: stark-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "3100:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - API_ROOT=${API_ROOT:-https://guscent-api.sfast.vn/v1}
+    networks:
+      - web-dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  web-dev:
+    driver: bridge

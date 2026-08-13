@@ -1,0 +1,58 @@
+---
+description: Kiến trúc App Router, routing tiếng Việt, layout và parallel routes
+alwaysApply: true
+---
+
+# Kiến trúc ứng dụng
+
+## App Router
+
+- Pages nằm trong `src/app/(default)/` — route group không ảnh hưởng URL.
+- `src/app/layout.tsx`: font (Montserrat, Playfair), `QueryProvider`, `AnalyticsProvider`.
+- `src/app/(default)/layout.tsx`: header desktop/mobile, footer, cart, float buttons, `GlobalConfigs`.
+
+## Routing song ngữ (rewrite)
+
+- File page dùng path **tiếng Anh** (`/collections/[id]`, `/blogs/[slug]`).
+- `next.config.ts` → `rewrites()` map URL **tiếng Việt** sang route nội bộ.
+- Luôn dùng `PATH` từ `@/constants/path` khi tạo link — không hard-code `/bo-suu-tap` rải rác.
+
+```typescript
+// ✅ Đúng
+import { PATH } from "@/constants/path";
+<Link href={PATH.collections._slug.vi(slug)} />
+
+// ❌ Sai — dễ lệch khi đổi rewrite
+<Link href={`/bo-suu-tap/${slug}`} />
+```
+
+## Parallel routes (Quiz)
+
+- `src/app/(default)/quizzes/layout.tsx` nhận `children` + `modal` từ slot `@modal`.
+- Modal kết quả quiz: `@modal/result/page.tsx` — pattern overlay không đổi URL chính.
+
+## Server vs Client
+
+- **Mặc định Server Component** — không thêm `"use client"` trừ khi cần hooks, event, browser API.
+- Page `async` fetch trực tiếp; organism con có thể là server component nếu chỉ render props.
+
+```typescript
+// ✅ Page pattern (blogs)
+const BlogsPage = async () => {
+  const blogsResponse = await getBlogs({ limit: 9 });
+  return <BlogsList blogs={blogsResponse.posts} pagination={…} />;
+};
+```
+
+## Loading & Suspense
+
+- `loading.tsx` cạnh page cho skeleton toàn trang khi cần.
+- Organism nặng: bọc bằng `<Suspense fallback={<XSkeleton />}>` trên page (xem home `Collections`).
+- Skeleton đặt trong `organisms/<feature>/skeletons/`, tái sử dụng class giống UI thật.
+
+## API routes (BFF)
+
+- `src/app/api/health` — health check deploy.
+- `src/app/api/orders/submit`, `api/quizzes/submit` — nhận JSON client, gọi `httpClient` server-side, trả lỗi có `message`.
+
+Không thêm logic business phức tạp trong Route Handler — chỉ validate tối thiểu + proxy.

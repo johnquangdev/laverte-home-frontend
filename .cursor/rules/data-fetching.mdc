@@ -1,0 +1,58 @@
+---
+description: Fetch server, React Query, BFF và phân trang load-more
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Data fetching
+
+## Server-only queries
+
+- Mọi `GET` cho SSR đặt trong `src/server/queries/<tên>.ts`.
+- Export hàm `get…` async, dùng `httpClient` từ `@/utils/http-client` (đọc `process.env.API_ROOT`).
+- Trả về data đã unwrap / default an toàn (`?? { items: [] }`).
+
+```typescript
+// ✅ Mẫu
+export const getCollections = async () => {
+  const response = await httpClient.get<GetCollectionsResponse>("/collections");
+  return response?.data ?? { collections: [] };
+};
+```
+
+- **Không** import `server/queries` vào file `"use client"`.
+
+## React Query (client)
+
+- `QueryProvider` ở root; `staleTime` 60s, `refetchOnWindowFocus: false`.
+- Query keys tập trung: `src/hooks/query-keys.ts` — thêm key mới vào object `Keys`, không string rời.
+- Queries: `src/hooks/queries/`; mutations: `src/hooks/mutations/`.
+
+## Load more (infinite list)
+
+- SSR trang 1 trên `page.tsx` → truyền `initialRecords` + `initialPagination` vào organism client.
+- Dùng `useLoadMore` — `useInfiniteQuery` + `fetchMore(page)` từ hook riêng feature.
+- Tham chiếu: `src/components/organisms/blogs/list.tsx`.
+
+## Mutations qua BFF
+
+- Client POST qua `internalAxiosClient` (`baseURL: "/api"`), không expose `API_ROOT` trực tiếp khi đã có route tương ứng.
+
+```typescript
+// ✅ Mẫu mutation
+await internalAxiosClient.post("/quizzes/submit", payload);
+// → src/app/api/quizzes/submit/route.ts → httpClient.post("/quizzes/submit", …)
+```
+
+- `externalAxiosClient` chỉ khi thật sự cần gọi public API từ browser — ưu tiên BFF.
+
+## Types API
+
+- Request/response: `src/types/api/dtos/*.ts`
+- Entity dùng trên UI: `src/types/api/entities/*.ts`
+- Khớp tên field backend; không `any` trừ boundary bất khả kháng.
+
+## Lỗi
+
+- `httpClient` throw `Error` với message từ API — Route Handler bắt và trả `NextResponse.json({ message }, { status })`.
+- UI hiển thị message tiếng Việt thân thiện, không leak stack trace.

@@ -1,0 +1,28 @@
+# File and Directory Naming Convention
+
+## Naming Rules:
+
+1. **File names**: Always use lowercase letters, words separated by hyphens (-)
+
+- ✅ Correct: `heading.tsx`, `user-profile.tsx`, `button.tsx`
+- ❌ Wrong: `Heading.tsx`, `UserProfile.tsx`, `Button.tsx`, `userProfile.tsx`
+
+2. **Directory names**: Always use lowercase letters, words separated by hyphens (-)
+
+- ✅ Correct: `user-profile/`, `button-group/`, `atoms/`
+- ❌ Wrong: `UserProfile/`, `ButtonGroup/`, `userProfile/`
+
+3. **Exceptions**:
+
+- Config files can keep their original format (e.g., `next.config.ts`, `tsconfig.json`)
+- README file can be uppercase: `README.md`
+- Files like `.gitignore`, `.env` and other dotfiles keep their original format
+
+## Examples:
+
+- Components: `heading.tsx`, `button.tsx`, `input-field.tsx`
+- Pages: `about-us.tsx`, `contact-page.tsx`
+- Utilities: `format-date.ts`, `validate-email.ts`
+- Folders: `components/atoms/`, `utils/helpers/`, `styles/themes/`
+
+Always follow this convention when creating new files or directories.

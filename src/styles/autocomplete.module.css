@@ -1,0 +1,17 @@
+/* Autocomplete Dropdown Scrollbar */
+.autocompleteContent::-webkit-scrollbar {
+  width: 4px;
+}
+
+.autocompleteContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.autocompleteContent::-webkit-scrollbar-thumb {
+  background: var(--color-beige);
+  border-radius: 2px;
+}
+
+.autocompleteContent::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray);
+}

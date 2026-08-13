@@ -1,0 +1,61 @@
+---
+description: Atomic design, component React và thư mục ui primitives
+globs: src/components/**/*
+alwaysApply: false
+---
+
+# Components
+
+## Atomic design
+
+| Tầng | Vị trí | Trách nhiệm |
+|------|--------|-------------|
+| atoms | `components/atoms/` | Nút, heading, input đơn, spinner — ít business |
+| molecules | `components/molecules/` | Card, form field group, block nhỏ |
+| organisms | `components/organisms/` | Section full-width theo trang/feature |
+| ui | `components/ui/` | Radix primitives (Dialog, Select, Label…) — không business Guscent |
+
+Feature mới: thêm organism trước; tách atom/molecule khi tái sử dụng ≥ 2 chỗ.
+
+## Khai báo component
+
+```typescript
+import type { FC, ReactNode } from "react";
+import { cn } from "@/utils/common";
+
+type Props = {
+  children: ReactNode;
+  className?: string;
+};
+
+export const SectionTitle: FC<Props> = ({ children, className }) => (
+  <h2 className={cn("font-playfair text-primary", className)}>{children}</h2>
+);
+```
+
+- **Named export** + `FC<Props>` — tránh `export default` cho component tái sử dụng.
+- `page.tsx` / `layout.tsx` của Next vẫn `export default` theo framework.
+
+## Variants
+
+- Map variant → class Tailwind trong `Record<Variant, string>` (xem `button.tsx`).
+- Prop `className` merge cuối qua `cn()`.
+
+## Icons & assets
+
+- Icon React: `src/assets/icons/*.tsx`
+- Ảnh tĩnh: `src/assets/imgs/`, `public/`
+- `next/image` cho ảnh remote — hostname đã khai báo trong `next.config.ts` (`remotePatterns`).
+
+## Organism theo domain
+
+Đặt theo feature: `organisms/blogs/`, `organisms/orders/`, `organisms/quizzes/` — không gom file không liên quan vào một organism “god”.
+
+## Rich content
+
+- Blog/article HTML: `ArticleViewer` + TipTap extensions — style prose trong component, không inline style ngẫu nhiên.
+
+## Client boundary
+
+- Chỉ `"use client"` ở file cần `useState`, `useEffect`, React Query, RHF, hoặc Radix tương tác.
+- Organism server có thể import organism client con — không import server component vào client file.
