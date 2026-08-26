@@ -8,11 +8,11 @@ type Props = {
 
 const BookPage: FC<Props> = async ({ searchParams }) => {
   const params = await searchParams;
-  const homeId = Number(params.home ?? "1");
+  const homeId = Number(params.home ?? "");
 
   return (
     <BookingSection
-      defaultHomeId={Number.isFinite(homeId) && homeId > 0 ? homeId : 1}
+      defaultHomeId={Number.isFinite(homeId) && homeId > 0 ? homeId : undefined}
     />
   );
 };

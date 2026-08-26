@@ -60,3 +60,11 @@ export type OverviewEntity = {
   total_revenue_vnd: number;
   booking_count: number;
 };
+
+export type PublicHomeEntity = {
+  id: number;
+  name: string;
+  category: "home" | "nest";
+  address: string;
+  description: string;
+};

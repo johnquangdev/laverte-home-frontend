@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import type { FC } from "react";
 
@@ -8,12 +8,14 @@ import { Button } from "@/components/atoms/button";
 import { Container } from "@/components/atoms/container";
 import { Heading } from "@/components/atoms/heading";
 import { Paragraph } from "@/components/atoms/paragraph";
+import { LabeledSpinner } from "@/components/atoms/spinner";
 import { PaymentCard } from "@/components/molecules/cards/payment-card";
 import { useCreateBookingMutation } from "@/hooks/mutations/booking";
+import { useHomesQuery } from "@/hooks/queries/homes";
 import type { BookingEntity, BookingType } from "@/types/api/entities";
 
 type Props = {
-  defaultHomeId: number;
+  defaultHomeId?: number;
 };
 
 const BOOKING_TYPES: { value: BookingType; label: string }[] = [
@@ -24,7 +26,10 @@ const BOOKING_TYPES: { value: BookingType; label: string }[] = [
 
 export const BookingSection: FC<Props> = ({ defaultHomeId }) => {
   const today = dayjs().format("YYYY-MM-DD");
-  const [homeId, setHomeId] = useState(String(defaultHomeId));
+  const homesQuery = useHomesQuery();
+  const [homeId, setHomeId] = useState<string>(
+    defaultHomeId ? String(defaultHomeId) : ""
+  );
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [bookingType, setBookingType] = useState<BookingType>("hourly");
@@ -35,6 +40,11 @@ export const BookingSection: FC<Props> = ({ defaultHomeId }) => {
   const [result, setResult] = useState<BookingEntity | null>(null);
 
   const createBooking = useCreateBookingMutation();
+
+  useEffect(() => {
+    if (homeId || !homesQuery.data?.length) return;
+    setHomeId(String(homesQuery.data[0].id));
+  }, [homeId, homesQuery.data]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -49,36 +59,56 @@ export const BookingSection: FC<Props> = ({ defaultHomeId }) => {
     setResult(booking);
   };
 
+  const selectedHome = homesQuery.data?.find(
+    (home) => String(home.id) === homeId
+  );
+
   return (
     <Container className="py-12">
       <Heading level={1} className="text-3xl text-emerald-950">
         Đặt phòng
       </Heading>
       <Paragraph level={1} className="mt-2 max-w-2xl text-emerald-800/80">
-        Điền thông tin bên dưới. Sau khi tạo đặt phòng, bạn sẽ thấy mã VietQR để
-        chuyển khoản trong 15 phút.
+        Chọn phòng và điền thông tin bên dưới. Sau khi tạo đặt phòng, bạn sẽ
+        thấy mã VietQR để chuyển khoản trong 15 phút.
       </Paragraph>
 
       <div className="mt-8 max-w-xl">
         {result ? (
           <PaymentCard booking={result} onReset={() => setResult(null)} />
+        ) : homesQuery.isLoading ? (
+          <LabeledSpinner>Đang tải danh sách phòng…</LabeledSpinner>
+        ) : homesQuery.error ? (
+          <p className="text-sm text-red-600">{homesQuery.error.message}</p>
+        ) : (homesQuery.data ?? []).length === 0 ? (
+          <p className="rounded-xl border border-emerald-100 bg-white p-6 text-emerald-800/80">
+            Hiện chưa có phòng nào mở đặt. Vui lòng quay lại sau.
+          </p>
         ) : (
           <form
             onSubmit={handleSubmit}
             className="grid gap-5 rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm"
           >
             <label className="grid gap-2 text-sm">
-              <span className="font-medium text-emerald-950">
-                Mã phòng (home_id)
-              </span>
-              <input
-                type="number"
-                min={1}
+              <span className="font-medium text-emerald-950">Phòng</span>
+              <select
                 required
                 value={homeId}
                 onChange={(e) => setHomeId(e.target.value)}
-                className="rounded-lg border border-emerald-200 px-3 py-2.5 outline-none focus:border-emerald-500"
-              />
+                className="rounded-lg border border-emerald-200 px-3 py-2.5"
+              >
+                {(homesQuery.data ?? []).map((home) => (
+                  <option key={home.id} value={home.id}>
+                    {home.name}
+                    {home.category === "nest" ? " (Nest)" : ""}
+                  </option>
+                ))}
+              </select>
+              {selectedHome?.description ? (
+                <span className="text-emerald-800/70">
+                  {selectedHome.description}
+                </span>
+              ) : null}
             </label>
             <label className="grid gap-2 text-sm">
               <span className="font-medium text-emerald-950">Họ tên</span>

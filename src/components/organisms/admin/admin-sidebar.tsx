@@ -10,8 +10,8 @@ import { useLogoutMutation } from "@/hooks/mutations/booking";
 import { useAuthStore } from "@/stores/auth";
 
 const NAV = [
-  { href: PATH.adminBookings, label: "Lịch đặt phòng" },
-  { href: PATH.adminOverview, label: "Doanh thu" },
+  { href: PATH.admin.bookings, label: "Lịch đặt phòng" },
+  { href: PATH.admin.overview, label: "Doanh thu" },
 ];
 
 export const AdminSidebar: FC = () => {
@@ -26,7 +26,7 @@ export const AdminSidebar: FC = () => {
       await logout.mutateAsync();
     } finally {
       clearSession();
-      router.push(PATH.adminLogin);
+      router.push(PATH.admin.login.en);
     }
   };
 

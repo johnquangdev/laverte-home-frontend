@@ -5,6 +5,11 @@ export const cn = (...inputs: ClassValue[]): string => {
   return twMerge(clsx(inputs));
 };
 
+export const formatPrice = (price: number | undefined): string => {
+  if (!price) return "";
+  return `${price.toLocaleString()}đ`;
+};
+
 export const formatVnd = (price: number | undefined): string => {
   if (price === undefined) return "";
   return new Intl.NumberFormat("vi-VN", {

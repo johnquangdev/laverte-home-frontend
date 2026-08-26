@@ -7,6 +7,17 @@ import type {
 } from "@/types/api/entities";
 import { useQuery } from "@tanstack/react-query";
 
+const fetchAdminBookings = async (
+  date: string,
+  homeId: number
+): Promise<AdminBookingEntity[]> => {
+  const params = new URLSearchParams({ date, home_id: String(homeId) });
+  const response = await internalAxiosClient.get<AdminBookingEntity[]>(
+    `/admin/bookings?${params.toString()}`
+  );
+  return response.data;
+};
+
 export const useAdminHomesQuery = () => {
   const { Keys } = useQueryKeys();
   return useQuery<HomeEntity[]>({
@@ -19,17 +30,29 @@ export const useAdminHomesQuery = () => {
   });
 };
 
-export const useAdminBookingsQuery = (date: string, homeId?: number) => {
+export const useAdminBookingsQuery = (
+  date: string,
+  homeId: number | undefined,
+  homes: HomeEntity[] | undefined
+) => {
   const { Keys } = useQueryKeys();
   return useQuery<AdminBookingEntity[]>({
     queryKey: Keys.ADMIN_BOOKINGS(date, homeId),
+    enabled: Boolean(homes?.length),
     queryFn: async () => {
-      const params = new URLSearchParams({ date });
-      if (homeId) params.set("home_id", String(homeId));
-      const response = await internalAxiosClient.get<AdminBookingEntity[]>(
-        `/admin/bookings?${params.toString()}`
+      const activeHomes = homes ?? [];
+      if (homeId) {
+        return fetchAdminBookings(date, homeId);
+      }
+      const batches = await Promise.all(
+        activeHomes.map((home) => fetchAdminBookings(date, home.id))
       );
-      return response.data;
+      return batches
+        .flat()
+        .sort(
+          (a, b) =>
+            new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
+        );
     },
   });
 };

@@ -18,7 +18,7 @@ export const AdminLayoutShell: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (!accessToken) {
-      router.replace(PATH.adminLogin);
+      router.replace(PATH.admin.login.en);
     }
   }, [accessToken, router]);
 

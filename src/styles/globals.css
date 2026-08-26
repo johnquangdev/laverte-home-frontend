@@ -2,27 +2,48 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --background: #f4faf7;
-  --foreground: #0f172a;
+  --background: #ffffff;
+  --foreground: #1c1c1c;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-outfit);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 
-  --color-primary: #065f46;
-  --color-primary-foreground: #ecfdf5;
-  --color-secondary: #34d399;
-  --color-muted: #64748b;
-  --color-background-1: #f4faf7;
-  --color-background-2: #ecfdf5;
-  --color-admin: #071612;
-  --color-admin-accent: #10b981;
+  /* Neutral Colors */
+  --color-black: #1c1c1c;
+  --color-gray: #636363;
+  --color-white: #ffffff;
+
+  /* Primary & Secondary Colors */
+  --color-primary: #5b4432;
+  --color-secondary: #c19759;
+
+  /* Background Colors */
+  --color-background-1: #f6f3ef;
+  --color-background-2: #faf3e8;
+  --color-taskbar: #c7bbaf;
+
+  /* Other Colors */
+  --color-brown: #d8b4a0;
+  --color-beige: #e7d8c9;
+  --color-dark-brown: #5B4432;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #1c1c1c;
+  }
 }
 
 html {
   scroll-behavior: smooth;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -30,9 +51,33 @@ body {
   padding: 0;
   background: var(--color-background-1);
   color: var(--foreground);
-  font-family: var(--font-outfit), sans-serif;
+  font-family: var(--font-montserrat), sans-serif;
 }
 
-@utility font-display {
-  font-family: var(--font-fraunces), serif;
+/* Font utility classes for Heading component */
+@utility font-playfair {
+  font-family: var(--font-playfair), serif;
+}
+
+@utility font-montserrat {
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+/* Custom Scrollbar Styles */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 5px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: var(--color-secondary);
+  border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
 }

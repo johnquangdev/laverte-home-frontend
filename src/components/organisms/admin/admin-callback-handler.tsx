@@ -28,7 +28,7 @@ export const AdminCallbackHandler: FC = () => {
       try {
         const session = await callback.mutateAsync({ code, state });
         setSession(session);
-        router.replace(PATH.adminBookings);
+        router.replace(PATH.admin.bookings);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Đăng nhập thất bại.");
       }
