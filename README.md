@@ -74,3 +74,13 @@ Health check: `GET /api/health`
 | `/admin/login` | Google OAuth admin |
 | `/admin/bookings` | Lịch booking |
 | `/admin/overview` | Doanh thu |
+
+## Bản giao diện HTML gốc
+
+Bản giao diện gốc nằm ở các file `index.html`, `booking.html`, `src/main.js`, `src/booking.js` và các file CSS/ảnh đi kèm. Chạy bằng:
+
+```bash
+pnpm dev:legacy
+```
+
+Sau đó mở http://localhost:5178
