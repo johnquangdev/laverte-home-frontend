@@ -1,0 +1,18 @@
+{
+  "name": "laverte-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Giao dien website luu tru rieng tu theo gio cho La Verte.",
+  "scripts": {
+    "dev": "python3 -m http.server 5178",
+    "start": "python3 -m http.server 5178"
+  },
+  "keywords": [
+    "frontend",
+    "private-stay",
+    "hourly-stay",
+    "laverte"
+  ],
+  "author": "",
+  "license": "UNLICENSED"
+}
