@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="La Verte - lưu trú riêng tư theo giờ với không gian nhà/villa sạch, đẹp, kín đáo và linh hoạt tại các thành phố đang phát triển."
+    />
+    <title>La Verte | Lưu trú riêng tư theo giờ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="Trang chủ La Verte">
+        <img src="./public/images/verte-logo.png" alt="La Verte" />
+      </a>
+      <nav class="main-nav" aria-label="Điều hướng chính">
+        <a href="#story">Về La Verte</a>
+        <a href="#residences">Chọn căn</a>
+        <a href="#membership">Trải nghiệm</a>
+        <a href="#footer">Liên hệ</a>
+      </nav>
+      <div class="header-actions">
+        <button class="lang-switch" type="button" aria-label="Đổi ngôn ngữ">VIE</button>
+        <button class="login-button" type="button">Đăng nhập</button>
+        <button class="icon-menu" type="button" aria-label="Mở menu" data-menu-open>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <aside class="drawer" data-drawer aria-hidden="true">
+      <button class="drawer-close" type="button" aria-label="Đóng menu" data-menu-close>×</button>
+      <nav aria-label="Điều hướng menu">
+        <a href="#story">Về La Verte</a>
+        <a href="#story">Điểm đến</a>
+        <a href="#membership">Trải nghiệm</a>
+        <a href="#residences">Chọn căn</a>
+      </nav>
+      <div class="drawer-foot">
+        <span>Hotline 1900 2208</span>
+        <span>hello@laverte.vn</span>
+      </div>
+    </aside>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-layout">
+          <figure class="hero-feature" data-hero-slider>
+            <img
+              class="hero-slide is-active"
+              src="./public/images/home-hero.jpg"
+              alt="Không gian phòng khách La Verte với nội thất ấm cúng"
+              data-hero-slide
+            />
+            <img
+              class="hero-slide hero-slide-portrait"
+              src="./public/images/hero-home-1-portrait.jpg"
+              alt="Phòng khách La Verte với giếng trời và khoảng xanh"
+              data-hero-slide
+            />
+            <img
+              class="hero-slide hero-slide-exterior"
+              src="./public/images/hero-home-1-wide.jpg"
+              alt="Ngoại thất La Verte trong ánh hoàng hôn tại Bảo Lộc"
+              data-hero-slide
+            />
+            <img
+              class="hero-slide"
+              src="./public/images/hero-home-2-bedroom.jpg"
+              alt="Phòng ngủ La Verte được chuẩn bị chỉn chu"
+              data-hero-slide
+            />
+          </figure>
+
+          <div class="hero-copy">
+            <h1 id="hero-title">Ở một nơi đẹp, dành thời gian cho nhau.</h1>
+            <p>
+              Những căn nhà ấm cúng giữa khoảng xanh, được chuẩn bị chỉn chu để bạn nghỉ ngơi,
+              hẹn hò hoặc tận hưởng một ngày thật chậm theo cách riêng.
+            </p>
+            <div class="hero-actions">
+              <a class="orange-cta" href="#residences">Chọn căn</a>
+              <a class="black-cta" href="#story">Khám phá La Verte</a>
+            </div>
+          </div>
+
+          <div class="hero-pagination" aria-label="Chọn ảnh đầu trang">
+            <button class="is-active" type="button" aria-label="Xem ảnh 1" aria-current="true" data-hero-dot="0"></button>
+            <button type="button" aria-label="Xem ảnh 2" data-hero-dot="1"></button>
+            <button type="button" aria-label="Xem ảnh 3" data-hero-dot="2"></button>
+            <button type="button" aria-label="Xem ảnh 4" data-hero-dot="3"></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="updates section-wrap" id="story" aria-labelledby="updates-title">
+        <div class="section-heading">
+          <span>Các khu vực triển khai</span>
+          <h2 id="updates-title">La Verte</h2>
+        </div>
+
+        <div class="news-grid">
+          <article class="news-card">
+            <img src="./public/images/bao-loc-nui.jpg" alt="Núi và biển mây tại Bảo Lộc, Lâm Đồng" />
+            <div>
+              <p>Lâm Đồng</p>
+              <h3>Bảo Lộc</h3>
+              <span>Không khí cao nguyên dịu mát, những đồi trà xanh và nhịp sống chậm vừa đủ cho một kỳ nghỉ ngắn.</span>
+              <a href="#residences">Khám phá ↗</a>
+            </div>
+          </article>
+          <article class="news-card">
+            <img src="./public/images/long-khanh-clean.png" alt="Không gian xanh tại Long Khánh, Đồng Nai" />
+            <div>
+              <p>Đồng Nai</p>
+              <h3>Long Khánh</h3>
+              <span>Miền vườn xanh mát, yên bình và gần gũi, phù hợp cho những ngày muốn tạm rời nhịp sống vội.</span>
+              <a href="#residences">Khám phá ↗</a>
+            </div>
+          </article>
+          <article class="news-card">
+            <img src="./public/images/dong-xoai-tuong-dai.jpg" alt="Tượng đài chiến thắng Đồng Xoài, Bình Phước" />
+            <div>
+              <p>Bình Phước</p>
+              <h3>Đồng Xoài</h3>
+              <span>Một điểm dừng mới trẻ trung, thuận tiện để nghỉ ngơi và khám phá nhịp sống đặc trưng của Bình Phước.</span>
+              <a href="#residences">Khám phá ↗</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="destinations section-wrap" id="residences" aria-labelledby="destinations-title">
+        <div class="split-title">
+          <div>
+            <p class="section-kicker">Không gian dành cho bạn</p>
+            <h2 id="destinations-title">Chọn căn La Verte</h2>
+          </div>
+          <div class="segmented" role="tablist" aria-label="Lọc căn theo khu vực">
+            <button class="active" type="button" data-filter="bao-loc">Bảo Lộc</button>
+            <button type="button" data-filter="dong-xoai">Đồng Xoài</button>
+            <button type="button" data-filter="long-khanh">Long Khánh</button>
+            <button type="button" data-filter="da-lat">Đà Lạt</button>
+          </div>
+        </div>
+
+        <div class="stay-grid" data-grid>
+          <article class="stay-card" data-location="bao-loc">
+            <img src="./public/images/home-hero.jpg" alt="Không gian La Verte Home 2 tại Bảo Lộc" />
+            <div>
+              <h3>La Verte Mây Trắng</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>149.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card" data-location="bao-loc">
+            <img src="./public/images/nest-1-bedroom.jpg" alt="Phòng ngủ La Verte Nest 1 tại Bảo Lộc" />
+            <div>
+              <h3>La Verte Đồi Thông</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>129.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card" data-location="bao-loc">
+            <img src="./public/images/nest-1-living.jpg" alt="Phòng khách La Verte tại Bảo Lộc" />
+            <div>
+              <h3>La Verte Suối Mơ</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>119.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card" data-location="bao-loc">
+            <img src="./public/images/home-2-bedroom.jpg" alt="Phòng ngủ La Verte tại Bảo Lộc" />
+            <div>
+              <h3>La Verte The Nest</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>139.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card" data-location="bao-loc">
+            <img src="./public/images/nest-1-kitchen.jpg" alt="Góc bếp La Verte tại Bảo Lộc" />
+            <div>
+              <h3>La Verte Vườn An</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>159.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card" data-location="bao-loc">
+            <img src="./public/images/nest-1-lounge.jpg" alt="Góc lounge La Verte tại Bảo Lộc" />
+            <div>
+              <h3>La Verte Chạm Xanh</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>169.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="dong-xoai">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1100&q=82" alt="Không gian nhà vườn La Verte Đồng Xoài" />
+            <div>
+              <h3>La Verte Bình Minh</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>149.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="dong-xoai">
+            <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1100&q=82" alt="Phòng ngủ ấm cúng La Verte Đồng Xoài" />
+            <div>
+              <h3>La Verte Phố Xanh</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>139.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="dong-xoai">
+            <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1100&q=82" alt="Phòng khách sáng và xanh của La Verte Đồng Xoài" />
+            <div>
+              <h3>La Verte The Olive</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>119.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="dong-xoai">
+            <img src="https://images.unsplash.com/photo-1750271329214-a7dbce880e85?auto=format&fit=crop&w=1100&q=82" alt="Không gian nghỉ dưỡng xanh La Verte Đồng Xoài" />
+            <div>
+              <h3>La Verte Gardenia</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>129.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="dong-xoai">
+            <img src="https://images.unsplash.com/photo-1774280960001-ce8169cfc38f?auto=format&fit=crop&w=1100&q=82" alt="Villa xanh riêng tư La Verte Đồng Xoài" />
+            <div>
+              <h3>La Verte Lặng Yên</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>159.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="dong-xoai">
+            <img src="https://images.unsplash.com/photo-1784730369371-0ae6a3a8d153?auto=format&fit=crop&w=1100&q=82" alt="Retreat riêng tư La Verte Đồng Xoài" />
+            <div>
+              <h3>La Verte Dấu Nắng</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>169.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="long-khanh">
+            <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1100&q=82" alt="Nhà vườn hiện đại La Verte Long Khánh" />
+            <div>
+              <h3>La Verte Orchard</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>149.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="long-khanh">
+            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1100&q=82" alt="Phòng khách mở La Verte Long Khánh" />
+            <div>
+              <h3>La Verte Vườn Mưa</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>139.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="long-khanh">
+            <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1100&q=82" alt="Không gian sinh hoạt La Verte Long Khánh" />
+            <div>
+              <h3>La Verte The Grove</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>129.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="long-khanh">
+            <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1100&q=82" alt="Villa sân vườn La Verte Long Khánh" />
+            <div>
+              <h3>La Verte Camellia</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>119.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="long-khanh">
+            <img src="https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?auto=format&fit=crop&w=1100&q=82" alt="Nội thất tinh gọn La Verte Long Khánh" />
+            <div>
+              <h3>La Verte Sân Vườn</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>159.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="long-khanh">
+            <img src="https://images.unsplash.com/photo-1600585153490-76fb20a32601?auto=format&fit=crop&w=1100&q=82" alt="Không gian nghỉ dưỡng La Verte Long Khánh" />
+            <div>
+              <h3>La Verte Mộc Miên</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>169.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="da-lat">
+            <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1100&q=82" alt="Phòng ngủ ấm áp La Verte Đà Lạt" />
+            <div>
+              <h3>La Verte Pine Hill</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>189.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="da-lat">
+            <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1100&q=82" alt="Phòng ngủ boutique La Verte Đà Lạt" />
+            <div>
+              <h3>La Verte Sương Mai</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>179.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="da-lat">
+            <img src="https://images.unsplash.com/photo-1618221118493-9cfa1a1c00da?auto=format&fit=crop&w=1100&q=82" alt="Góc nghỉ yên tĩnh La Verte Đà Lạt" />
+            <div>
+              <h3>La Verte The Loft</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>159.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="da-lat">
+            <img src="https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=1100&q=82" alt="Không gian riêng tư La Verte Đà Lạt" />
+            <div>
+              <h3>La Verte Moonlight</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>149.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="da-lat">
+            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1100&q=82" alt="Nội thất nhẹ nhàng La Verte Đà Lạt" />
+            <div>
+              <h3>La Verte Hoa Ban</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>139.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+          <article class="stay-card is-hidden" data-location="da-lat">
+            <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1100&q=82" alt="Căn hộ sáng ấm La Verte Đà Lạt" />
+            <div>
+              <h3>La Verte Cloud Nine</h3>
+              <p title="Giá tốt nhất trong 7 ngày tới"><span>Giá tiết kiệm</span><strong>129.000đ/h</strong></p>
+              <a class="book-now" href="./booking.html">Đặt ngay</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="membership" id="membership" aria-label="Không gian La Verte dành cho cặp đôi">
+        <img src="./public/images/couple-retreat-banner.png" alt="Không gian La Verte riêng tư dành cho cặp đôi" />
+      </section>
+
+    </main>
+
+    <footer class="site-footer" id="footer">
+      <div class="footer-top">
+        <div>
+          <h2>Chọn một khoảng xanh cho lần nghỉ tiếp theo</h2>
+          <p>La Verte hiện diện tại Bảo Lộc và đang chuẩn bị những điểm đến mới dành cho bạn.</p>
+          <a href="mailto:hello@laverte.vn">Liên hệ La Verte</a>
+        </div>
+        <div class="contact-list">
+          <p><span>Hotline</span><strong>1900 2208 / Zalo OA</strong></p>
+          <p><span>Email</span><strong>hello@laverte.vn</strong></p>
+        </div>
+        <div>
+          <h3>Theo dõi chúng tôi qua</h3>
+          <div class="socials" aria-label="Mạng xã hội">
+            <a href="#" aria-label="Facebook">f</a>
+            <a href="#" aria-label="Instagram">◎</a>
+            <a href="#" aria-label="TikTok">♪</a>
+            <a href="#" aria-label="LinkedIn">in</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h3>TRẢI NGHIỆM</h3>
+          <a href="#">Lưu trú riêng tư theo giờ</a>
+          <a href="#">Setup kỷ niệm</a>
+        </div>
+        <div>
+          <h3>LA VERTE</h3>
+          <a href="#">Về chúng tôi</a>
+          <a href="#">Khu vực triển khai</a>
+          <a href="#">Phong cách La Verte</a>
+        </div>
+        <div>
+          <h3>ĐIỂM ĐẾN</h3>
+          <a href="#">Bảo Lộc</a>
+          <a href="#">Long Khánh</a>
+          <a href="#">Đồng Xoài</a>
+          <a href="#">Đà Lạt</a>
+        </div>
+        <div>
+          <h3>CHÍNH SÁCH</h3>
+          <a href="#">Chính sách bảo mật</a>
+          <a href="#">Xác minh khách</a>
+          <a href="#">An toàn lưu trú</a>
+        </div>
+      </div>
+      <p class="copyright">© CÔNG TY CỔ PHẦN LA VERTE. Giao diện website ý tưởng.</p>
+    </footer>
+
+    <button class="chat-button" type="button" aria-label="Trò chuyện với La Verte">≡</button>
+    <script src="./src/main.js"></script>
+  </body>
+</html>

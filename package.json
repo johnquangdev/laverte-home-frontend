@@ -6,6 +6,8 @@
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start",
+    "dev:legacy": "python3 -m http.server 5178",
+    "start:legacy": "python3 -m http.server 5178",
     "lint": "eslint . --fix --max-warnings=0",
     "prepare": "husky"
   },
