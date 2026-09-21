@@ -2,220 +2,79 @@ name: Deploy Frontend
 
 on:
   push:
-    branches:
-      - main
-      - develop
-  release:
-    types: [published]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  API_ROOT: https://guscent-api.sfast.vn/v1
+  IMAGE: ghcr.io/johnquangdev/laverte-home-frontend
+  # Baked into the client bundle at build time; must match the live backend.
+  API_ROOT: https://be.laverte.vn/api/v1
 
 jobs:
   build-and-push:
-    # Self-hosted BuildKit avoids the shared GitHub-hosted concurrency cap
-    # (org plan is capped at 20 concurrent jobs). NOTE: Actions does NOT
-    # auto-fallback to a GitHub-hosted runner if no runner matches this
-    # label set — the job queues until timeout-minutes fails it.
-    runs-on: [self-hosted, linux, x64, buildkit-remote, sfastvn-host]
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      packages: write
-
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx (remote BuildKit)
-        uses: docker/setup-buildx-action@v3
-        with:
-          driver: remote
-          endpoint: tcp://buildkitd:1234
-          driver-opts: |
-            cacert=/certs/ca.pem
-            cert=/certs/client-cert.pem
-            key=/certs/client-key.pem
+      - uses: docker/setup-buildx-action@v3
 
-      - name: Log in to Container Registry
+      - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' || github.event_name == 'release' }}
-            type=raw,value=develop,enable=${{ github.ref == 'refs/heads/develop' }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+      - name: Build and push
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             API_ROOT=${{ env.API_ROOT }}
             NEXT_PUBLIC_API_ROOT=${{ env.API_ROOT }}
-          # type=gha does not work with the remote BuildKit driver — the GHA
-          # cache exporter needs ACTIONS_CACHE_URL/RUNTIME_TOKEN forwarded into
-          # buildkitd, which setup-buildx-action only wires up for the
-          # docker-container driver. Registry-backed cache instead.
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:buildcache,mode=max
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-  deploy-prod:
+  deploy:
     needs: build-and-push
-    # This job's `docker compose` calls run directly on the deploy target via
-    # SSH — no local build needed, so no buildkit-remote label required.
-    runs-on: [self-hosted, linux, x64, sfastvn-host]
-    timeout-minutes: 10
-    if: github.ref == 'refs/heads/main' || github.event_name == 'release'
-
+    runs-on: ubuntu-latest
     steps:
-      # appleboy/ssh-action is a Docker container action — it needs to `docker
-      # build` its own image on the runner, which requires a local Docker
-      # daemon. sfastvn-host has no local dockerd (build capability is remote
-      # BuildKit over TCP only), so the action fails with "Cannot connect to
-      # the Docker daemon at unix:///var/run/docker.sock". Use plain ssh with
-      # a key file instead — same fix already applied in the lumen-* repos.
-      - name: Configure SSH
-        env:
-          SSH_KEY: ${{ secrets.DEPLOY_KEY }}
-        run: |
-          KEY_DIR="${RUNNER_TEMP}/deploy-ssh"
-          mkdir -p "$KEY_DIR" && chmod 700 "$KEY_DIR"
-          KEY_FILE="$KEY_DIR/id_ed25519"
-          printf '%s\n' "$SSH_KEY" > "$KEY_FILE"
-          chmod 600 "$KEY_FILE"
-          cat > "$KEY_DIR/config" <<EOF
-          Host deploy-target
-            HostName ${{ secrets.SERVER_HOST }}
-            User ${{ secrets.SERVER_USER }}
-            IdentityFile $KEY_FILE
-            IdentitiesOnly yes
-            StrictHostKeyChecking no
-            UserKnownHostsFile /dev/null
-            LogLevel ERROR
-          EOF
-          chmod 600 "$KEY_DIR/config"
-          echo "SSH_CFG=$KEY_DIR/config" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
 
-      - name: Deploy to server
-        # GitHub Actions substitutes ${{ }} expressions into this script's
-        # text before bash ever sees it, so secrets/env land here as plain
-        # literals — same as the original appleboy/ssh-action `script:`
-        # input.
-        run: |
-          ssh -F "$SSH_CFG" deploy-target bash -s <<'REMOTE'
-          cd ${{ secrets.PROJECT_PATH }}
-          git pull origin main
-          export DOCKER_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          export API_ROOT=${{ env.API_ROOT }}
-          echo ${{ secrets.GHCR_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-          docker compose down
-          docker compose pull
-          docker compose up -d
-          # Scoped to this repo's own image only — ghcr.io/sfastvn matches
-          # every project sharing this host (lumen-api, lumen-app-frontend,
-          # ...) and would try to rmi their in-use images too.
-          docker images | grep "ghcr.io/sfastvn/stark-frontend" | grep -v "latest" | awk '{print $3}' | xargs -r docker rmi
-          echo "Waiting for application to be healthy..."
-          for i in {1..30}; do
-            if curl -f http://localhost:3000 > /dev/null 2>&1; then
-              echo "Application is healthy!"
-              exit 0
-            fi
-            echo "Waiting... ($i/30)"
-            sleep 10
-          done
-          echo "Application failed to start properly"
-          docker compose logs
-          exit 1
-          REMOTE
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-  deploy-develop:
-    needs: build-and-push
-    runs-on: [self-hosted, linux, x64, sfastvn-host]
-    timeout-minutes: 10
-    if: github.ref == 'refs/heads/develop'
-
-    steps:
-      - name: Configure SSH
-        env:
-          SSH_KEY: ${{ secrets.DEPLOY_KEY }}
+      - name: Trust the host key
         run: |
-          KEY_DIR="${RUNNER_TEMP}/deploy-ssh"
-          mkdir -p "$KEY_DIR" && chmod 700 "$KEY_DIR"
-          KEY_FILE="$KEY_DIR/id_ed25519"
-          printf '%s\n' "$SSH_KEY" > "$KEY_FILE"
-          chmod 600 "$KEY_FILE"
-          cat > "$KEY_DIR/config" <<EOF
-          Host deploy-target
-            HostName ${{ secrets.SERVER_HOST }}
-            User ${{ secrets.SERVER_USER }}
-            IdentityFile $KEY_FILE
-            IdentitiesOnly yes
-            StrictHostKeyChecking no
-            UserKnownHostsFile /dev/null
-            LogLevel ERROR
-          EOF
-          chmod 600 "$KEY_DIR/config"
-          echo "SSH_CFG=$KEY_DIR/config" >> "$GITHUB_ENV"
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Deploy develop to server
+      - name: Copy compose file to server
         run: |
-          ssh -F "$SSH_CFG" deploy-target bash -s <<'REMOTE'
-          set -euo pipefail
-          DEV_PATH="${{ secrets.DEV_PROJECT_PATH }}"
-          PROD_PATH="${{ secrets.PROJECT_PATH }}"
-          if [ "$DEV_PATH" = "$PROD_PATH" ]; then
-            echo "DEV_PROJECT_PATH must not equal PROJECT_PATH"
-            exit 1
-          fi
-          mkdir -p "$(dirname "$DEV_PATH")"
-          if [ ! -d "$DEV_PATH/.git" ]; then
-            echo "Bootstrapping develop deploy directory at $DEV_PATH"
-            rm -rf "$DEV_PATH"
-            git clone --branch develop git@github.com:sfastvn/stark-frontend.git "$DEV_PATH"
-          fi
-          cd "$DEV_PATH"
-          git fetch origin develop
-          git checkout develop
-          git pull origin develop
-          if [ ! -f .env ] && [ -f "$PROD_PATH/.env" ]; then
-            echo "Copying .env from prod path"
-            cp "$PROD_PATH/.env" .env
-          fi
-          if [ ! -f docker-compose.dev.yml ]; then
-            echo "Missing docker-compose.dev.yml after git pull"
-            exit 1
-          fi
-          export API_ROOT=${{ env.API_ROOT }}
-          echo ${{ secrets.GHCR_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-          docker rm -f stark-frontend-dev 2>/dev/null || true
-          docker compose -p stark-frontend-dev -f docker-compose.dev.yml down 2>/dev/null || true
-          docker compose -p stark-frontend-dev -f docker-compose.dev.yml pull
-          docker compose -p stark-frontend-dev -f docker-compose.dev.yml up -d
-          docker images | grep "ghcr.io/sfastvn/stark-frontend" | grep -v "develop" | grep -v "latest" | awk '{print $3}' | xargs -r docker rmi || true
-          echo "Waiting for develop application to be healthy..."
-          for i in {1..30}; do
-            if curl -f http://localhost:3100/api/health > /dev/null 2>&1; then
-              echo "Develop application is healthy!"
-              exit 0
-            fi
-            echo "Waiting... ($i/30)"
-            sleep 10
-          done
-          echo "Develop application failed to start properly"
-          docker compose -p stark-frontend-dev -f docker-compose.dev.yml logs
-          exit 1
-          REMOTE
+          scp -P "${{ secrets.SSH_PORT }}" docker-compose.production.yml \
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ vars.DEPLOY_PATH }}/docker-compose.production.yml"
+
+      - name: Pull image and restart on server
+        # The automatic GITHUB_TOKEN can pull this repo's own GHCR package for the
+        # duration of the run, so no long-lived PAT is needed on the box.
+        run: |
+          ssh -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+            GHTOKEN="${{ secrets.GITHUB_TOKEN }}" ACTOR="${{ github.actor }}" DEPLOY_PATH="${{ vars.DEPLOY_PATH }}" \
+            bash -s <<'ENDSSH'
+          set -eu
+          cd "${DEPLOY_PATH}"
+          echo "${GHTOKEN}" | docker login ghcr.io -u "${ACTOR}" --password-stdin
+          docker-compose -f docker-compose.production.yml pull
+          docker-compose -f docker-compose.production.yml up -d
+          docker image prune -f
+          ENDSSH
