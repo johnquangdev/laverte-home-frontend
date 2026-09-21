@@ -1,20 +1,23 @@
-import { Suspense } from "react";
+import type { Metadata } from "next";
 
-import { HomeBlogPreview } from "@/components/organisms/home/blog-preview";
-import { HomeHero } from "@/components/organisms/home/hero";
-import { HomeManifesto } from "@/components/organisms/home/manifesto";
-import { PhilosophyCarouselSection } from "@/components/organisms/home/philosophy-carousel-section";
-import { PhilosophyCarouselSkeleton } from "@/components/organisms/home/skeletons/philosophy-carousel";
+import { Hero } from "@/components/organisms/laverte/hero";
+import { Membership } from "@/components/organisms/laverte/membership";
+import { Residences } from "@/components/organisms/laverte/residences";
+import { Updates } from "@/components/organisms/laverte/updates";
+
+export const metadata: Metadata = {
+  title: "La Verte | Lưu trú riêng tư theo giờ",
+  description:
+    "La Verte - lưu trú riêng tư theo giờ với không gian nhà/villa sạch, đẹp, kín đáo và linh hoạt tại các thành phố đang phát triển.",
+};
 
 const Home = () => {
   return (
     <>
-      <HomeHero />
-      <Suspense fallback={<PhilosophyCarouselSkeleton />}>
-        <PhilosophyCarouselSection />
-      </Suspense>
-      <HomeManifesto />
-      <HomeBlogPreview />
+      <Hero />
+      <Updates />
+      <Residences />
+      <Membership />
     </>
   );
 };
