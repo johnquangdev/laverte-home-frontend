@@ -30,6 +30,68 @@
   --color-brown: #d8b4a0;
   --color-beige: #e7d8c9;
   --color-dark-brown: #5B4432;
+
+  /* Admin surfaces — neutral, per the hotel-dashboard reference. Deliberately
+     separate from the guest-facing brown palette above: the two never mix.
+     admin-page is measured off the reference frame; the sidebar has no fill of
+     its own there, so it shares that value rather than inventing one. */
+  --color-admin-page: #f0f0f0;
+  --color-admin-sidebar: #f0f0f0;
+  --color-admin-card: #ffffff;
+
+  --color-admin-line: #e5e5e5;
+  --color-admin-field: #d4d4d4;
+
+  --color-admin-ink: #171717;
+  --color-admin-body: #737373;
+
+  /* The one place brand survives in an otherwise neutral admin: the active nav
+     bar and primary actions. Reference uses a warm rust hairline in this role. */
+  --color-admin-accent: #5b4432;
+
+  /* Booking and payment states. Reference draws them outlined — pale fill,
+     mid-tone border, saturated label — so each hue needs all three. Values are
+     Tailwind's scale, which is where the reference's own `green/700` style name
+     comes from. */
+  --color-state-paid: #f0fdf4;
+  --color-state-paid-line: #bbf7d0;
+  --color-state-paid-fg: #15803d;
+
+  --color-state-checkin: #faf5ff;
+  --color-state-checkin-line: #e9d5ff;
+  --color-state-checkin-fg: #7e22ce;
+
+  --color-state-pending: #fffbeb;
+  --color-state-pending-line: #fde68a;
+  --color-state-pending-fg: #b45309;
+
+  --color-state-expired: #f5f5f5;
+  --color-state-expired-line: #e5e5e5;
+  --color-state-expired-fg: #737373;
+
+  --color-state-cancelled: #fef2f2;
+  --color-state-cancelled-line: #fecaca;
+  --color-state-cancelled-fg: #dc2626;
+
+  /* Stat-tile deltas and the guest-count chip. */
+  --color-delta-up: #16a34a;
+  --color-delta-down: #dc2626;
+  --color-chip-count: #eff6ff;
+  --color-chip-count-fg: #2563eb;
+
+  --color-danger: #b91c1c;
+  --color-danger-fg: #dc2626;
+
+  /* Named alongside Tailwind's numeric radii rather than replacing them —
+     rounded-lg/xl are already in use and would shift under a redefinition. */
+  --radius-field: 8px;
+  --radius-card: 12px;
+  --radius-pill: 9999px;
+
+  /* 44px is the WCAG touch-target floor and what Button already ships. */
+  --spacing-control-sm: 34px;
+  --spacing-control-md: 40px;
+  --spacing-control-lg: 44px;
 }
 
 @media (prefers-color-scheme: dark) {

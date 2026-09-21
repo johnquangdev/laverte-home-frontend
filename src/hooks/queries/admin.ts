@@ -5,7 +5,7 @@ import type {
   HomeEntity,
   OverviewEntity,
 } from "@/types/api/entities";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 
 const fetchAdminBookings = async (
   date: string,
@@ -68,6 +68,29 @@ export const useAdminOverviewQuery = (from: string, to: string) => {
       );
       return response.data;
     },
+  });
+};
+
+/**
+ * One aggregate request per month. The overview endpoint only returns totals for
+ * a range, so a trend has to be assembled client-side — six cheap aggregates
+ * rather than a day-by-day sweep, which would be thirty.
+ */
+export const useMonthlyOverviewQueries = (
+  ranges: { from: string; to: string }[]
+) => {
+  const { Keys } = useQueryKeys();
+  return useQueries({
+    queries: ranges.map(({ from, to }) => ({
+      queryKey: Keys.ADMIN_OVERVIEW(from, to),
+      queryFn: async (): Promise<OverviewEntity> => {
+        const params = new URLSearchParams({ from, to });
+        const response = await internalAxiosClient.get<OverviewEntity>(
+          `/admin/overview?${params.toString()}`
+        );
+        return response.data;
+      },
+    })),
   });
 };
 

@@ -20,6 +20,12 @@ class Path {
     callback: "/admin/auth/callback" as const,
     bookings: "/admin/bookings" as const,
     overview: "/admin/overview" as const,
+    rooms: "/admin/rooms" as const,
+    pricing: "/admin/pricing" as const,
+    blockedSlots: "/admin/blocked-slots" as const,
+    payments: "/admin/payments" as const,
+    sepay: "/admin/sepay" as const,
+    settings: "/admin/settings" as const,
   };
 
   // Collections
