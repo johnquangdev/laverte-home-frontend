@@ -12,6 +12,13 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "bs-uploads.toptal.io" },
     ],
   },
+  // The admin has no index page of its own; /admin is the address people type
+  // and where cms.laverte.vn redirects to.
+  redirects() {
+    return [
+      { source: "/admin", destination: "/admin/bookings", permanent: false },
+    ];
+  },
   rewrites() {
     return [
       { source: "/dat-phong", destination: "/book" },

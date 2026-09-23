@@ -16,6 +16,15 @@ services:
       - traefik.http.routers.laverte-fe.entrypoints=websecure
       - traefik.http.routers.laverte-fe.tls.certresolver=letsencrypt
       - traefik.http.services.laverte-fe.loadbalancer.server.port=3000
+      # cms.laverte.vn hosted the retired admin CMS. Redirect rather than let the
+      # hostname 404; temporary (302) so browsers keep no memory of it if the
+      # CMS is ever brought back.
+      - traefik.http.routers.laverte-cms-retired.rule=Host(`cms.laverte.vn`)
+      - traefik.http.routers.laverte-cms-retired.entrypoints=websecure
+      - traefik.http.routers.laverte-cms-retired.tls.certresolver=letsencrypt
+      - traefik.http.routers.laverte-cms-retired.middlewares=laverte-cms-retired
+      - traefik.http.middlewares.laverte-cms-retired.redirectregex.regex=^https?://cms\.laverte\.vn/.*
+      - traefik.http.middlewares.laverte-cms-retired.redirectregex.replacement=https://dev.laverte.vn/admin
 
 networks:
   kpa_network:
