@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import type { FC, ReactNode } from "react";
 
@@ -12,17 +12,28 @@ type Props = {
   children: ReactNode;
 };
 
+const subscribeNothing = () => () => undefined;
+
 export const AdminLayoutShell: FC<Props> = ({ children }) => {
   const accessToken = useAuthStore((state) => state.accessToken);
   const router = useRouter();
+  // The hydration render reads the store's server snapshot, which is the
+  // pre-rehydration state with no token. Redirecting on that render logged the
+  // admin out on every full page load, so the check waits for the first
+  // client render, where the persisted token is visible.
+  const hydrated = useSyncExternalStore(
+    subscribeNothing,
+    () => true,
+    () => false
+  );
 
   useEffect(() => {
-    if (!accessToken) {
+    if (hydrated && !accessToken) {
       router.replace(PATH.admin.login.en);
     }
-  }, [accessToken, router]);
+  }, [hydrated, accessToken, router]);
 
-  if (!accessToken) {
+  if (!hydrated || !accessToken) {
     return null;
   }
 

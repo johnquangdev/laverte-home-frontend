@@ -26,6 +26,7 @@ class Path {
     payments: "/admin/payments" as const,
     sepay: "/admin/sepay" as const,
     settings: "/admin/settings" as const,
+    admins: "/admin/admins" as const,
   };
 
   // Collections

@@ -1,16 +1,7 @@
 import type { FC } from "react";
 
-import { AdminStubPanel } from "@/components/organisms/admin/admin-stub-panel";
+import { AdminRoomsPanel } from "@/components/organisms/admin/admin-rooms-panel";
 
-const AdminRoomsPage: FC = () => (
-  <AdminStubPanel
-    title="Phòng"
-    purpose="Danh sách home và nest: bật/tắt, sửa mô tả, gắn Google Calendar."
-    endpoints={[
-      { method: "GET", path: "/api/v1/admin/homes", exists: true },
-      { method: "POST", path: "/api/v1/admin/homes", exists: true },
-    ]}
-  />
-);
+const AdminRoomsPage: FC = () => <AdminRoomsPanel />;
 
 export default AdminRoomsPage;

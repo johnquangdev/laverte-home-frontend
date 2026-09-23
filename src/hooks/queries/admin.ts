@@ -2,10 +2,17 @@ import { useQueryKeys } from "@/hooks/query-keys";
 import { internalAxiosClient } from "@/lib/axios";
 import type {
   AdminBookingEntity,
+  AdminListItemEntity,
+  AdminPaymentEntity,
+  AdminSettingsEntity,
+  BlockedSlotEntity,
+  HomeCategory,
   HomeEntity,
-  OverviewEntity,
+  OverviewBreakdownEntity,
+  PricingRuleEntity,
+  UnmatchedTransferEntity,
 } from "@/types/api/entities";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const fetchAdminBookings = async (
   date: string,
@@ -57,40 +64,107 @@ export const useAdminBookingsQuery = (
   });
 };
 
-export const useAdminOverviewQuery = (from: string, to: string) => {
+/**
+ * Active rules for one category. The backend filters on an exact category, so
+ * an empty one answers an empty list rather than every rule.
+ */
+export const usePricingRulesQuery = (category: HomeCategory) => {
   const { Keys } = useQueryKeys();
-  return useQuery<OverviewEntity>({
-    queryKey: Keys.ADMIN_OVERVIEW(from, to),
+  return useQuery<PricingRuleEntity[]>({
+    queryKey: Keys.ADMIN_PRICING_RULES(category),
     queryFn: async () => {
-      const params = new URLSearchParams({ from, to });
-      const response = await internalAxiosClient.get<OverviewEntity>(
-        `/admin/overview?${params.toString()}`
+      const response = await internalAxiosClient.get<PricingRuleEntity[]>(
+        `/admin/pricing-rules?category=${category}`
       );
       return response.data;
     },
   });
 };
 
-/**
- * One aggregate request per month. The overview endpoint only returns totals for
- * a range, so a trend has to be assembled client-side — six cheap aggregates
- * rather than a day-by-day sweep, which would be thirty.
- */
-export const useMonthlyOverviewQueries = (
-  ranges: { from: string; to: string }[]
+export const useBlockedSlotsQuery = (homeId: number | undefined) => {
+  const { Keys } = useQueryKeys();
+  return useQuery<BlockedSlotEntity[]>({
+    queryKey: Keys.ADMIN_BLOCKED_SLOTS(homeId),
+    enabled: homeId !== undefined,
+    queryFn: async () => {
+      const response = await internalAxiosClient.get<BlockedSlotEntity[]>(
+        `/admin/blocked-slots?home_id=${homeId}`
+      );
+      return response.data;
+    },
+  });
+};
+
+/** `to` is exclusive, like the overview's: pass the day after the last one shown. */
+export const useAdminPaymentsQuery = (from: string, to: string) => {
+  const { Keys } = useQueryKeys();
+  return useQuery<AdminPaymentEntity[]>({
+    queryKey: Keys.ADMIN_PAYMENTS(from, to),
+    queryFn: async () => {
+      const params = new URLSearchParams({ from, to });
+      const response = await internalAxiosClient.get<AdminPaymentEntity[]>(
+        `/admin/payments?${params.toString()}`
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useUnmatchedTransfersQuery = (
+  status: "open" | "all",
+  enabled = true
 ) => {
   const { Keys } = useQueryKeys();
-  return useQueries({
-    queries: ranges.map(({ from, to }) => ({
-      queryKey: Keys.ADMIN_OVERVIEW(from, to),
-      queryFn: async (): Promise<OverviewEntity> => {
-        const params = new URLSearchParams({ from, to });
-        const response = await internalAxiosClient.get<OverviewEntity>(
-          `/admin/overview?${params.toString()}`
-        );
-        return response.data;
-      },
-    })),
+  return useQuery<UnmatchedTransferEntity[]>({
+    queryKey: Keys.ADMIN_UNMATCHED(status),
+    enabled,
+    queryFn: async () => {
+      const response = await internalAxiosClient.get<UnmatchedTransferEntity[]>(
+        `/admin/unmatched-transfers?status=${status}`
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useAdminSettingsQuery = () => {
+  const { Keys } = useQueryKeys();
+  return useQuery<AdminSettingsEntity>({
+    queryKey: Keys.ADMIN_SETTINGS,
+    queryFn: async () => {
+      const response =
+        await internalAxiosClient.get<AdminSettingsEntity>("/admin/settings");
+      return response.data;
+    },
+    // Fixed at boot on the backend; nothing on this screen can change it.
+    staleTime: Infinity,
+  });
+};
+
+export const useOverviewBreakdownQuery = (month: string) => {
+  const { Keys } = useQueryKeys();
+  return useQuery<OverviewBreakdownEntity>({
+    queryKey: Keys.ADMIN_BREAKDOWN(month),
+    queryFn: async () => {
+      const response = await internalAxiosClient.get<OverviewBreakdownEntity>(
+        `/admin/overview/breakdown?month=${month}`
+      );
+      return response.data;
+    },
+  });
+};
+
+/** Superadmin-only on the backend; anyone else gets a 403 here. */
+export const useAdminsQuery = () => {
+  const { Keys } = useQueryKeys();
+  return useQuery<AdminListItemEntity[]>({
+    queryKey: Keys.ADMIN_ADMINS,
+    queryFn: async () => {
+      const response =
+        await internalAxiosClient.get<AdminListItemEntity[]>("/admin/admins");
+      return response.data;
+    },
+    retry: false,
   });
 };
 

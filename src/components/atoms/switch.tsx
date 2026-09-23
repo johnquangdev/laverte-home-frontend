@@ -7,18 +7,28 @@ type Props = {
   onChange: (checked: boolean) => void;
   /** Visible text beside the control; also the accessible name. */
   label: string;
+  /** Overrides the accessible name when several switches share one label. */
+  ariaLabel?: string;
+  disabled?: boolean;
 };
 
-export const Switch: FC<Props> = ({ checked, onChange, label }) => (
+export const Switch: FC<Props> = ({
+  checked,
+  onChange,
+  label,
+  ariaLabel,
+  disabled,
+}) => (
   <label className="min-h-control-md flex cursor-pointer items-center gap-2.5">
     <span className="text-admin-body text-sm select-none">{label}</span>
     <button
       type="button"
       role="switch"
       aria-checked={checked}
-      aria-label={label}
+      aria-label={ariaLabel ?? label}
+      disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={`focus-visible:ring-admin-accent relative h-6 w-11 shrink-0 rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none ${
+      className={`focus-visible:ring-admin-accent relative h-6 w-11 shrink-0 rounded-full transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${
         checked ? "bg-admin-accent" : "bg-admin-field"
       }`}
     >

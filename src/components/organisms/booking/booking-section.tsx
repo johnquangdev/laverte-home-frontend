@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import type { FC } from "react";
 
@@ -11,7 +11,7 @@ import { Paragraph } from "@/components/atoms/paragraph";
 import { LabeledSpinner } from "@/components/atoms/spinner";
 import { PaymentCard } from "@/components/molecules/cards/payment-card";
 import { useCreateBookingMutation } from "@/hooks/mutations/booking";
-import { useHomesQuery } from "@/hooks/queries/homes";
+import { useAvailabilityQuery, useHomesQuery } from "@/hooks/queries/homes";
 import type { BookingEntity, BookingType } from "@/types/api/entities";
 
 type Props = {
@@ -40,6 +40,32 @@ export const BookingSection: FC<Props> = ({ defaultHomeId }) => {
   const [result, setResult] = useState<BookingEntity | null>(null);
 
   const createBooking = useCreateBookingMutation();
+  const [overlapError, setOverlapError] = useState<string | null>(null);
+
+  // Local wall-clock with its offset, not toISOString(): the guest picked a time
+  // in their own zone, and the overnight rule's window is a wall-clock check.
+  const start = dayjs(`${startDate}T${startTime}`);
+  const end = dayjs(`${endDate}T${endTime}`);
+
+  // Whole days around the chosen stay, so the guest sees what else is taken on
+  // the days they are looking at, not only the exact minutes they typed.
+  const windowFrom = dayjs(startDate).startOf("day").format();
+  const windowTo = dayjs(endDate < startDate ? startDate : endDate)
+    .add(1, "day")
+    .startOf("day")
+    .format();
+  const availability = useAvailabilityQuery(
+    homeId ? Number(homeId) : undefined,
+    windowFrom,
+    windowTo
+  );
+  const busy = useMemo(
+    () => availability.data?.busy ?? [],
+    [availability.data]
+  );
+  const clash = busy.find(
+    (b) => start.isBefore(dayjs(b.end_time)) && end.isAfter(dayjs(b.start_time))
+  );
 
   useEffect(() => {
     if (homeId || !homesQuery.data?.length) return;
@@ -48,13 +74,22 @@ export const BookingSection: FC<Props> = ({ defaultHomeId }) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    // The server's exclusion constraint is the real guard; this only saves the
+    // guest a round trip for a slot they can already see is taken.
+    if (clash) {
+      setOverlapError(
+        `Khung ${dayjs(clash.start_time).format("DD/MM HH:mm")}–${dayjs(clash.end_time).format("HH:mm")} đã có người đặt. Vui lòng chọn giờ khác.`
+      );
+      return;
+    }
+    setOverlapError(null);
     const booking = await createBooking.mutateAsync({
       home_id: Number(homeId),
       customer_name: customerName.trim(),
       customer_phone: customerPhone.trim(),
       booking_type: bookingType,
-      start_time: dayjs(`${startDate}T${startTime}`).toISOString(),
-      end_time: dayjs(`${endDate}T${endTime}`).toISOString(),
+      start_time: start.format(),
+      end_time: end.format(),
     });
     setResult(booking);
   };
@@ -183,6 +218,39 @@ export const BookingSection: FC<Props> = ({ defaultHomeId }) => {
                 />
               </label>
             </div>
+            <div className="grid gap-1.5 text-sm" aria-live="polite">
+              <span className="font-medium text-emerald-950">
+                Khung giờ đã kín trong những ngày này
+              </span>
+              {availability.isLoading ? (
+                <span className="text-emerald-800/70">Đang kiểm tra lịch…</span>
+              ) : busy.length === 0 ? (
+                <span className="text-emerald-800/70">
+                  Chưa có ai đặt, bạn chọn giờ nào cũng được.
+                </span>
+              ) : (
+                <ul className="flex flex-wrap gap-2">
+                  {busy.map((b) => (
+                    <li
+                      key={`${b.start_time}-${b.end_time}`}
+                      className="rounded-full border border-emerald-200 px-3 py-1 text-emerald-900 tabular-nums"
+                    >
+                      {dayjs(b.start_time).format("DD/MM HH:mm")}–
+                      {dayjs(b.end_time).format(
+                        dayjs(b.end_time).isSame(dayjs(b.start_time), "day")
+                          ? "HH:mm"
+                          : "DD/MM HH:mm"
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {overlapError ? (
+              <p className="text-sm text-red-600" role="alert">
+                {overlapError}
+              </p>
+            ) : null}
             {createBooking.error ? (
               <p className="text-sm text-red-600">
                 {createBooking.error.message}

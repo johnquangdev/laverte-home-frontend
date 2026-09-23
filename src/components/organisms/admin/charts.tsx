@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from "react";
 
 import type { Point } from "@/utils/chart";
-import { smoothPath } from "@/utils/chart";
+import { formatPercent, smoothPath } from "@/utils/chart";
 
 /**
  * Categorical slots, assigned in fixed order and never cycled. Validated for
@@ -291,7 +291,7 @@ export const Donut: FC<DonutProps> = ({ percent, caption }) => {
           width={140}
           height={140}
           role="img"
-          aria-label={`${percent}% — ${caption}`}
+          aria-label={`${formatPercent(percent)} — ${caption}`}
         >
           <circle
             cx={70}
@@ -314,7 +314,7 @@ export const Donut: FC<DonutProps> = ({ percent, caption }) => {
           />
         </svg>
         <span className="text-admin-ink absolute inset-0 flex items-center justify-center text-2xl font-semibold">
-          {percent}%
+          {formatPercent(percent)}
         </span>
       </div>
       <p className="text-admin-body mt-2 max-w-[220px] text-center text-xs">

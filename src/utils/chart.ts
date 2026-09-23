@@ -28,7 +28,12 @@ export const smoothPath = (pts: Point[], tension = 0.5): string => {
 export const compactVnd = (value: number): string => {
   if (value >= 1_000_000_000)
     return `${(value / 1_000_000_000).toFixed(1).replace(".", ",")} tỷ`;
-  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(0)} tr`;
+  // One decimal below 10tr: "1 tr" for 1.240.000 ₫ hides a fifth of the figure.
+  if (value >= 1_000_000) {
+    const millions = value / 1_000_000;
+    const text = millions < 10 ? millions.toFixed(1) : millions.toFixed(0);
+    return `${text.replace(/\.0$/, "").replace(".", ",")} tr`;
+  }
   if (value >= 1_000) return `${Math.round(value / 1_000)}k`;
   return String(Math.round(value));
 };
@@ -40,3 +45,11 @@ export const percentChange = (
   previous > 0
     ? Number((((current - previous) / previous) * 100).toFixed(1))
     : undefined;
+
+const percentFormat = new Intl.NumberFormat("vi-VN", {
+  maximumFractionDigits: 1,
+});
+
+/** "12,5%" — the decimal comma Vietnamese readers expect. */
+export const formatPercent = (value: number): string =>
+  `${percentFormat.format(value)}%`;

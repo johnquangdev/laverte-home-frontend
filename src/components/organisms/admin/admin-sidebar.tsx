@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   LogOut,
   Settings,
+  ShieldCheck,
   Tags,
   Wallet,
 } from "lucide-react";
@@ -52,6 +53,7 @@ const NAV_GROUPS: { heading: string; items: NavItem[] }[] = [
     items: [
       { href: PATH.admin.sepay, label: "Cấu hình SePay", icon: Wallet },
       { href: PATH.admin.settings, label: "Cài đặt", icon: Settings },
+      { href: PATH.admin.admins, label: "Quản trị viên", icon: ShieldCheck },
     ],
   },
 ];

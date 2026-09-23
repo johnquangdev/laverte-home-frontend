@@ -51,6 +51,24 @@ const refreshAccessToken = (): Promise<string | null> => {
   return refreshPromise;
 };
 
+type ApiErrorBody = { message?: string; error?: string };
+
+/**
+ * Screens render `error.message`, and axios fills it with "Request failed with
+ * status code 409". The reason the backend gave is in the body, so move it up.
+ */
+const withApiMessage = (error: unknown): unknown => {
+  if (!axios.isAxiosError<ApiErrorBody>(error) || !error.response) return error;
+  if (error.response.status === 429) {
+    error.message = "Thao tác quá nhanh, vui lòng thử lại sau ít phút.";
+    return error;
+  }
+  const body = error.response.data;
+  const reason = body?.message ?? body?.error;
+  if (reason) error.message = reason;
+  return error;
+};
+
 internalAxiosClient.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -65,13 +83,13 @@ internalAxiosClient.interceptors.response.use(
       originalRequest._retry ||
       originalRequest.url?.includes("/auth/")
     ) {
-      return Promise.reject(error);
+      return Promise.reject(withApiMessage(error));
     }
 
     originalRequest._retry = true;
     const accessToken = await refreshAccessToken();
     if (!accessToken) {
-      return Promise.reject(error);
+      return Promise.reject(withApiMessage(error));
     }
 
     originalRequest.headers.Authorization = `Bearer ${accessToken}`;

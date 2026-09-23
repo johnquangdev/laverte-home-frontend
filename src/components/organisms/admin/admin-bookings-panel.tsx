@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   KeyRound,
   MoreVertical,
+  Plus,
   Search,
   SearchX,
   Send,
@@ -22,7 +23,13 @@ import { FilterChip } from "@/components/atoms/filter-chip";
 import { LabeledSpinner } from "@/components/atoms/spinner";
 import { StatTile } from "@/components/atoms/stat-tile";
 import { BOOKING_STATUS, StatusPill } from "@/components/atoms/status-pill";
+import { ADMIN_BTN_PRIMARY } from "@/components/organisms/admin/admin-form";
 import { AdminPageHeader } from "@/components/organisms/admin/admin-page-header";
+import {
+  AdminWalkInDialog,
+  walkInCreatedMessage,
+} from "@/components/organisms/admin/admin-walk-in-dialog";
+import { BOOKING_TYPE_LABELS } from "@/constants/admin";
 import {
   useCancelBookingMutation,
   useCompleteBookingMutation,
@@ -40,12 +47,6 @@ import type {
   BookingType,
 } from "@/types/api/entities";
 import { formatVnd } from "@/utils/common";
-
-const BOOKING_TYPE_LABELS: Record<BookingType, string> = {
-  hourly: "Theo giờ",
-  overnight: "Qua đêm",
-  day: "Theo ngày",
-};
 
 // One template shared by header and rows so columns can never drift apart.
 const COLS =
@@ -259,6 +260,8 @@ export const AdminBookingsPanel: FC = () => {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
   const [typeFilter, setTypeFilter] = useState<string[]>([]);
+  const [walkInOpen, setWalkInOpen] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const homesQuery = useAdminHomesQuery();
   const bookingsQuery = useAdminBookingsQuery(date, homeId, homesQuery.data);
@@ -364,9 +367,40 @@ export const AdminBookingsPanel: FC = () => {
                 ))}
               </select>
             </label>
+            <button
+              type="button"
+              onClick={() => {
+                setNotice(null);
+                setWalkInOpen(true);
+              }}
+              disabled={noHomes}
+              className={ADMIN_BTN_PRIMARY}
+            >
+              <Plus aria-hidden="true" className="size-4" />
+              Tạo booking
+            </button>
           </>
         }
       />
+
+      <p className="text-state-paid-fg text-sm empty:hidden" aria-live="polite">
+        {notice}
+      </p>
+
+      {walkInOpen ? (
+        <AdminWalkInDialog
+          homes={homesQuery.data ?? []}
+          defaultHomeId={homeId}
+          onClose={() => setWalkInOpen(false)}
+          onCreated={(booking) => {
+            setWalkInOpen(false);
+            // Jump to the booking's own day, or it lands off-screen whenever
+            // it was made for a date other than the one being viewed.
+            setDate(dayjs(booking.start_time).format("YYYY-MM-DD"));
+            setNotice(walkInCreatedMessage(booking));
+          }}
+        />
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatTile label="Booking trong ngày" value={String(stats.total)} />
