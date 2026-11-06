@@ -688,6 +688,508 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* ================= home ================= */
+
+  /* ---------- hero: photo → mist → title → house cut-out, so the roof hides the word ---------- */
+  /* lvh: the photo runs on under Safari's floating toolbar instead of stopping short of it */
+  .lvm .m-hero {
+    --px: 0;
+    --py: 0;
+    position: relative;
+    height: 100lvh;
+    min-height: 600px;
+    overflow: hidden;
+    background: var(--sky);
+  }
+
+  .lvm .m-hero .scene {
+    position: absolute;
+    inset: -14px;
+    transform: translate3d(calc(var(--px) * -9px), calc(var(--py) * -7px), 0);
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .lvm .m-hero .zoom {
+    position: absolute;
+    inset: 0;
+    animation: lvm-push 24s ease-in-out infinite alternate;
+    transform-origin: 38% 45%;
+  }
+
+  .lvm .m-hero .layer {
+    position: absolute;
+    inset: 0;
+    background-position: 50% 50%;
+    background-size: cover;
+    filter: brightness(0.86) saturate(1.05);
+  }
+
+  .lvm .m-hero .photo {
+    background-image: url(/images/mobile/aframe.jpg);
+  }
+
+  /* the cut-out must keep the photo's exact framing to line up pixel for pixel */
+  .lvm .m-hero .house {
+    background-image: url(/images/mobile/aframe-house.webp);
+    z-index: 3;
+  }
+
+  .lvm .m-hero .fog {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .lvm .m-hero .title {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    right: 0;
+    top: 17.5%;
+    padding: 0 22px 0 30px;
+    color: #fff;
+    font-size: 29vw;
+    line-height: 0.86;
+    transform: translate3d(calc(var(--px) * 7px), calc(var(--py) * 5px), 0);
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .lvm .m-hero .title span {
+    display: block;
+  }
+
+  .lvm .m-hero .l1 {
+    opacity: 0;
+    transform: translateY(-0.12em);
+    filter: blur(10px);
+  }
+
+  /* starts low enough that "Verte" sits behind the roof, then rises out of it */
+  .lvm .m-hero .l2 {
+    opacity: 0;
+    transform: translateY(0.62em);
+  }
+
+  .lvm .m-hero.play .l1 {
+    animation: lvm-settle 1.3s cubic-bezier(0.2, 0.8, 0.2, 1) 0.25s forwards;
+  }
+
+  .lvm .m-hero.play .l2 {
+    animation: lvm-emerge 1.5s cubic-bezier(0.16, 0.84, 0.24, 1) 0.55s forwards;
+  }
+
+  .lvm .m-hero .shade {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      rgba(5, 10, 20, 0.45) 0%,
+      transparent 16%,
+      transparent 70%,
+      rgba(5, 10, 20, 0.35) 100%
+    );
+  }
+
+  .lvm .m-hero .ui {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+  }
+
+  .lvm .m-hero .fade {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .lvm .m-hero.play .fade {
+    animation: lvm-settle 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: var(--d, 1s);
+  }
+
+  .lvm .m-hero .hot {
+    position: absolute;
+    width: 214px;
+    display: flex;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: var(--lift);
+    text-decoration: none;
+  }
+
+  .lvm .m-hero .hot img {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    object-fit: cover;
+    flex: none;
+  }
+
+  .lvm .m-hero .hot b {
+    display: block;
+    font-size: 14px;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+
+  .lvm .m-hero .hot span {
+    display: block;
+    font-size: 12.5px;
+    line-height: 1.35;
+    color: var(--ash);
+    margin-top: 3px;
+  }
+
+  .lvm .m-hero .lead {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.85);
+    transform: scale(0);
+  }
+
+  .lvm .m-hero .lead.h {
+    height: 1px;
+    transform-origin: right;
+  }
+
+  .lvm .m-hero .lead.v {
+    width: 1px;
+    transform-origin: bottom;
+  }
+
+  .lvm .m-hero.play .lead {
+    animation: lvm-draw 0.7s cubic-bezier(0.6, 0.05, 0.2, 1) forwards;
+    animation-delay: var(--d);
+  }
+
+  .lvm .m-hero .dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.35);
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  .lvm .m-hero.play .dot {
+    animation:
+      lvm-pop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) forwards,
+      lvm-ping 2.6s ease-out infinite;
+    animation-delay: var(--d), calc(var(--d) + 0.6s);
+  }
+
+  /* lifted by the toolbar height (lvh − svh) so it clears Safari's bottom bar */
+  .lvm .m-hero .down {
+    position: absolute;
+    right: 16px;
+    bottom: calc(100lvh - 100svh + 18px);
+  }
+
+  .lvm .m-hero .down .icon-btn {
+    width: 56px;
+    height: 56px;
+  }
+
+  .lvm .m-hero .down svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* ---------- sections ---------- */
+  .lvm .m-block {
+    padding: 40px 24px 8px;
+  }
+
+  .lvm .m-block .h-section {
+    margin-top: 6px;
+  }
+
+  .lvm .m-block .body-ash {
+    margin-top: 10px;
+  }
+
+  .lvm .intro .h-section {
+    font-size: 30px;
+    line-height: 1.18;
+  }
+
+  .lvm .intro .btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .lvm .intro .btns .btn {
+    padding: 0 10px;
+    font-size: 15px;
+  }
+
+  /* ---------- stays: full-height cards that stick and stack while scrolling ---------- */
+  .lvm .tabs {
+    display: flex;
+    gap: 22px;
+    margin: 18px -24px 0;
+    padding: 0 24px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .lvm .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lvm .tabs button {
+    flex: none;
+    min-height: 48px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ash);
+    box-shadow: inset 0 -2px 0 transparent;
+    cursor: pointer;
+    transition:
+      color 0.2s,
+      box-shadow 0.2s;
+    touch-action: manipulation;
+  }
+
+  .lvm .tabs button[aria-selected="true"] {
+    color: var(--ink);
+    font-weight: 600;
+    box-shadow: inset 0 -2px 0 var(--ink);
+  }
+
+  /* the tabs scroll sideways, so their focus ring is drawn inside the button */
+  .lvm .tabs button:focus-visible {
+    outline: none;
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+
+  .lvm .stack {
+    margin-top: 22px;
+  }
+
+  /* The height keeps the top bar and the reserve bar off every card's button;
+     each later card sticks 10px lower so the edges of the ones beneath show.
+     Opaque, so a card whose photo hasn't arrived still hides the one below. */
+  .lvm .scard {
+    position: sticky;
+    top: calc(var(--top) + 66px + var(--i) * 10px);
+    display: block;
+    height: calc(100svh - var(--top) - 66px - var(--bot) - 88px - 50px);
+    min-height: 440px;
+    margin-bottom: 16px;
+    border-radius: 20px;
+    overflow: hidden;
+    color: #fff;
+    text-decoration: none;
+    background: #2b2f33;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.18);
+  }
+
+  .lvm .scard:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  .lvm .scard > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+  }
+
+  .lvm .scard::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.18),
+      transparent 28%,
+      transparent 46%,
+      rgba(0, 0, 0, 0.75)
+    );
+  }
+
+  .lvm .badge {
+    position: absolute;
+    z-index: 2;
+    top: 12px;
+    left: 12px;
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: rgba(0, 0, 0, 0.08) 0 2px 6px;
+  }
+
+  .lvm .scard .num {
+    position: absolute;
+    z-index: 2;
+    top: 16px;
+    right: 16px;
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .lvm .scard .body {
+    position: absolute;
+    z-index: 2;
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+  }
+
+  .lvm .scard .kick {
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+
+  .lvm .scard h3 {
+    font-size: 14vw;
+    margin-top: 4px;
+  }
+
+  .lvm .scard .row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .lvm .scard small {
+    display: block;
+    font-size: 13px;
+    opacity: 0.85;
+  }
+
+  .lvm .scard b {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lvm .scard .btn {
+    min-height: 44px;
+    padding: 0 18px;
+    font-size: 15px;
+    background: #fff;
+    color: var(--ink);
+  }
+
+  /* ---------- membership: banner hand-cropped to the couple ---------- */
+  /* The banner bakes its headline into the upper left, right above the couple,
+     so no object-fit crop drops it. This frames the banner's x 760–1717,
+     y 350–916 (of 1717×916). */
+  .lvm .moment .ph {
+    position: relative;
+    margin-top: 20px;
+    aspect-ratio: 957 / 566;
+    border-radius: 20px;
+    overflow: hidden;
+    clip-path: inset(4% 3% round 20px);
+    transition: clip-path 1.2s cubic-bezier(0.16, 0.84, 0.24, 1);
+  }
+
+  .lvm .moment.in .ph {
+    clip-path: inset(0 round 20px);
+  }
+
+  .lvm .moment .ph img {
+    position: absolute;
+    top: 0;
+    left: -79.4%;
+    width: 179.4%;
+    max-width: none;
+    height: auto;
+    margin-top: -36.6%;
+    transform: scale(1.08);
+    transform-origin: 75% 70%;
+    transition: transform 1.6s cubic-bezier(0.16, 0.84, 0.24, 1);
+  }
+
+  .lvm .moment.in .ph img {
+    transform: none;
+  }
+
+  .lvm .moment .h-sub {
+    margin-top: 20px;
+  }
+
+  .lvm .moment .btn {
+    margin-top: 16px;
+  }
+
+  /* ---------- where you'll be: one block per open area ---------- */
+  .lvm .place {
+    display: grid;
+    gap: 28px;
+    margin-top: 20px;
+  }
+
+  .lvm .place .ph {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--chip);
+  }
+
+  .lvm .place .ph img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.08);
+    transition: transform 1.2s cubic-bezier(0.16, 0.84, 0.24, 1);
+  }
+
+  .lvm .place article.in .ph img {
+    transform: none;
+  }
+
+  .lvm .place h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .lvm .place p {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ash);
+    margin-top: 4px;
+  }
+
+  .lvm .place .btn {
+    margin-top: 14px;
+  }
+
+  .lvm .home-end {
+    height: 48px;
+  }
+
   /* ---------- in-page jumps (document.startViewTransition) ---------- */
   ::view-transition-old(root) {
     animation: lvm-out 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -712,6 +1214,62 @@
   }
 }
 
+@keyframes lvm-push {
+  from {
+    transform: scale(1.03);
+  }
+
+  to {
+    transform: scale(1.11);
+  }
+}
+
+@keyframes lvm-settle {
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes lvm-emerge {
+  0% {
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lvm-draw {
+  to {
+    transform: none;
+  }
+}
+
+@keyframes lvm-pop {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes lvm-ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55);
+  }
+
+  100% {
+    box-shadow: 0 0 0 16px rgba(255, 255, 255, 0);
+  }
+}
+
 @media (max-width: 768px) and (prefers-reduced-motion: reduce) {
   .lvm .mask > span,
   .lvm .reveal,
@@ -728,5 +1286,29 @@
 
   .lvm .mask > span {
     transform: none;
+  }
+
+  .lvm .m-hero .zoom {
+    animation: none;
+  }
+
+  /* entrance pieces jump straight to their end state */
+  .lvm .m-hero.play .l1,
+  .lvm .m-hero.play .l2,
+  .lvm .m-hero.play .fade,
+  .lvm .m-hero.play .lead {
+    animation-duration: 0.01s;
+    animation-delay: 0s;
+  }
+
+  /* drop the endless ping: shortened, it would strobe */
+  .lvm .m-hero.play .dot {
+    animation: lvm-pop 0.01s forwards;
+  }
+
+  .lvm .moment .ph,
+  .lvm .moment .ph img,
+  .lvm .place .ph img {
+    transition: none;
   }
 }
