@@ -4,6 +4,7 @@ import { Hero } from "@/components/organisms/laverte/hero";
 import { Membership } from "@/components/organisms/laverte/membership";
 import { Residences } from "@/components/organisms/laverte/residences";
 import { Updates } from "@/components/organisms/laverte/updates";
+import { MobileHome } from "@/components/organisms/mobile/home";
 
 export const metadata: Metadata = {
   title: "La Verte | Lưu trú riêng tư theo giờ",
@@ -14,10 +15,13 @@ export const metadata: Metadata = {
 const Home = () => {
   return (
     <>
-      <Hero />
-      <Updates />
-      <Residences />
-      <Membership />
+      <div className="lvd">
+        <Hero />
+        <Updates />
+        <Residences />
+        <Membership />
+      </div>
+      <MobileHome />
     </>
   );
 };

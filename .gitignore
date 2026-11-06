@@ -39,3 +39,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 dist/
+
+# design mockups and browser-automation output, not part of the app
+/.superpowers/
+/.playwright-mcp/

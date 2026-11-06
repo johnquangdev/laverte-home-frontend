@@ -1,28 +1,6 @@
 import type { FC } from "react";
 
-const AREAS = [
-  {
-    img: "/images/bao-loc-nui.jpg",
-    alt: "Núi và biển mây tại Bảo Lộc, Lâm Đồng",
-    region: "Lâm Đồng",
-    name: "Bảo Lộc",
-    desc: "Không khí cao nguyên dịu mát, những đồi trà xanh và nhịp sống chậm vừa đủ cho một kỳ nghỉ ngắn.",
-  },
-  {
-    img: "/images/long-khanh-clean.png",
-    alt: "Không gian xanh tại Long Khánh, Đồng Nai",
-    region: "Đồng Nai",
-    name: "Long Khánh",
-    desc: "Miền vườn xanh mát, yên bình và gần gũi, phù hợp cho những ngày muốn tạm rời nhịp sống vội.",
-  },
-  {
-    img: "/images/dong-xoai-tuong-dai.jpg",
-    alt: "Tượng đài chiến thắng Đồng Xoài, Bình Phước",
-    region: "Bình Phước",
-    name: "Đồng Xoài",
-    desc: "Một điểm dừng mới trẻ trung, thuận tiện để nghỉ ngơi và khám phá nhịp sống đặc trưng của Bình Phước.",
-  },
-];
+import { AREAS } from "@/constants/stays";
 
 export const Updates: FC = () => {
   return (
