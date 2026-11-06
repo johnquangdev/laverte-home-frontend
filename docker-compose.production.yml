@@ -12,7 +12,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=kpa_network
-      - traefik.http.routers.laverte-fe.rule=Host(`dev.laverte.vn`)
+      - traefik.http.routers.laverte-fe.rule=Host(`laverte.vn`) || Host(`www.laverte.vn`) || Host(`dev.laverte.vn`)
       - traefik.http.routers.laverte-fe.entrypoints=websecure
       - traefik.http.routers.laverte-fe.tls.certresolver=letsencrypt
       - traefik.http.services.laverte-fe.loadbalancer.server.port=3000
