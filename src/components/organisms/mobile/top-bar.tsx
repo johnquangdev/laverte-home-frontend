@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, useEffect, useState } from "react";
+import { type FC, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
@@ -25,6 +25,8 @@ export const MobileTopBar: FC = () => <TopBar key={usePathname()} />;
 
 const TopBar: FC = () => {
   const [open, setOpen] = useState(false);
+  const menuBtnRef = useRef<HTMLButtonElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
   const [onPhoto, setOnPhoto] = useState(false);
   const [hideBrand, setHideBrand] = useState(false);
 
@@ -56,15 +58,20 @@ const TopBar: FC = () => {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
+  // A disclosure, not a modal: the toggle that closes it sits in the bar
+  // outside the sheet, so focus is walked in on open and back on close.
   useEffect(() => {
     if (!open) return;
     const root = document.documentElement;
     root.style.overflow = "hidden";
+    sheetRef.current?.querySelector("a")?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
+    const menuBtn = menuBtnRef.current;
     return () => {
       root.style.overflow = "";
       window.removeEventListener("keydown", onKey);
+      menuBtn?.focus({ preventScroll: true });
     };
   }, [open]);
 
@@ -114,6 +121,7 @@ const TopBar: FC = () => {
             Chọn căn
           </Link>
           <button
+            ref={menuBtnRef}
             className="icon-btn menu-btn"
             type="button"
             aria-controls="lvm-menu"
@@ -128,11 +136,9 @@ const TopBar: FC = () => {
       </header>
 
       <div
+        ref={sheetRef}
         className={clsx("sheet", open && "open")}
         id="lvm-menu"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Menu"
         inert={!open}
       >
         <nav aria-label="Điều hướng menu">
