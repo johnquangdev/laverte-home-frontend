@@ -319,7 +319,7 @@
   }
 
   .lvm .topbar .cta {
-    min-height: 40px;
+    min-height: 44px;
     padding: 0 16px;
     font-size: 14px;
     transition:
@@ -632,8 +632,9 @@
   }
 
   .lvm .footer .links li a {
-    display: block;
-    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
     text-decoration: none;
     color: var(--ash);
     font-size: 15px;
