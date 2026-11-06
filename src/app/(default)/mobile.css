@@ -1190,6 +1190,438 @@
     height: 48px;
   }
 
+  /* ================= booking ================= */
+
+  /* listing-detail layout: the photo, then a white sheet overlapping it */
+  .lvm .bk-photo {
+    position: relative;
+    aspect-ratio: 4 / 3.7;
+    overflow: hidden;
+    background: var(--chip);
+  }
+
+  .lvm .bk-photo img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    animation: lvm-settle-in 1.4s cubic-bezier(0.16, 0.84, 0.24, 1) both;
+  }
+
+  /* keeps the white logo and buttons legible on bright interiors */
+  .lvm .bk-photo::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 120px;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), transparent);
+  }
+
+  .lvm .bk-photo .count {
+    position: absolute;
+    z-index: 2;
+    right: 16px;
+    bottom: 40px;
+    min-height: 28px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 6px;
+    background: rgba(34, 34, 34, 0.72);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lvm .bk-sheet {
+    position: relative;
+    z-index: 2;
+    margin-top: -24px;
+    border-radius: 24px 24px 0 0;
+    background: var(--canvas);
+    padding: 26px 24px 24px;
+  }
+
+  .lvm .bk-sheet h1 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .lvm .bk-sheet .sub {
+    margin-top: 6px;
+    font-size: 15px;
+    color: var(--ash);
+  }
+
+  .lvm .bk-sheet .sub b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .lvm .bk-sheet hr {
+    border: 0;
+    border-top: 1px solid var(--hair);
+    margin: 24px 0;
+  }
+
+  .lvm .bk-sheet .body-ash {
+    margin-top: 8px;
+  }
+
+  .lvm .bk-state {
+    margin-top: 20px;
+    padding: 18px 16px;
+    border: 1px solid var(--hair);
+    border-radius: 14px;
+    color: var(--ash);
+    font-size: 15px;
+  }
+
+  .lvm .panel {
+    margin-top: 20px;
+    padding: 18px 16px;
+    border: 1px solid var(--hair);
+    border-radius: 14px;
+    box-shadow: var(--lift);
+  }
+
+  .lvm .panel + .panel {
+    margin-top: 16px;
+  }
+
+  .lvm .panel .q {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .lvm .panel .q + .chips,
+  .lvm .panel .q + .box,
+  .lvm .panel .q + .busy {
+    margin-top: 12px;
+  }
+
+  .lvm .panel .q:not(:first-child) {
+    margin-top: 18px;
+  }
+
+  .lvm .panel .q small {
+    font-weight: 500;
+    color: var(--ash);
+    margin-left: 6px;
+    font-size: 14px;
+  }
+
+  .lvm .box {
+    border: 1px solid var(--stone);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .lvm .cell {
+    display: block;
+    position: relative;
+    padding: 9px 12px 8px;
+    min-height: 58px;
+  }
+
+  .lvm .cell + .cell {
+    border-top: 1px solid var(--stone);
+  }
+
+  /* the box clips, so focus is shown inside the cell */
+  .lvm .cell:focus-within {
+    box-shadow: inset 0 0 0 2px var(--ink);
+    border-radius: 10px;
+  }
+
+  .lvm .cell > span {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* 16px keeps iOS Safari from zooming the page when a field takes focus */
+  .lvm .cell input,
+  .lvm .cell select {
+    display: block;
+    width: 100%;
+    min-height: 26px;
+    margin-top: 2px;
+    background: none;
+    color: var(--charcoal);
+    font: 500 16px Manrope, system-ui, sans-serif;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .lvm .cell input::placeholder {
+    color: var(--mute);
+  }
+
+  .lvm .cell input::-webkit-date-and-time-value {
+    text-align: left;
+  }
+
+  .lvm .cell select {
+    padding-right: 24px;
+  }
+
+  .lvm .cell.select::after {
+    content: "";
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+
+  .lvm .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .lvm .grid2 .cell + .cell {
+    border-top: 0;
+    border-left: 1px solid var(--stone);
+  }
+
+  .lvm .grid2 + .grid2 {
+    border-top: 1px solid var(--stone);
+  }
+
+  .lvm .home-desc {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--ash);
+  }
+
+  .lvm .chips {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .lvm .chips label {
+    position: relative;
+    display: grid;
+  }
+
+  .lvm .chips input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .lvm .chips span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 6px;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px var(--hair);
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      box-shadow 0.2s,
+      background-color 0.2s;
+  }
+
+  .lvm .chips input:checked + span {
+    box-shadow: inset 0 0 0 2px var(--ink);
+    background: var(--cloud);
+    font-weight: 600;
+  }
+
+  .lvm .chips input:focus-visible + span {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  .lvm .busy {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .lvm .busy li {
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 12px;
+    border-radius: 8px;
+    background: var(--chip);
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lvm .busy li.hit {
+    background: #fff1ee;
+    color: var(--error);
+    box-shadow: inset 0 0 0 1px var(--error);
+  }
+
+  .lvm .free {
+    font-size: 14px;
+    color: var(--ash);
+    margin-top: 8px;
+  }
+
+  .lvm .err {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 16px;
+    color: var(--error);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  .lvm .err::before {
+    content: "!";
+    flex: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--error);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .lvm .bk-note {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--ash);
+    text-align: center;
+  }
+
+  /* ---------- VietQR payment (payment-card.tsx data) ---------- */
+  .lvm .pay {
+    padding: calc(var(--top) + 84px) 24px 40px;
+    animation: lvm-rise 0.6s cubic-bezier(0.16, 0.84, 0.24, 1) both;
+  }
+
+  .lvm .pay h1 {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-top: 4px;
+  }
+
+  .lvm .pay .amount {
+    margin-top: 4px;
+    font-size: 17px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lvm .qr {
+    margin: 24px auto 0;
+    width: min(72vw, 280px);
+    padding: 18px;
+    border: 1px solid var(--hair);
+    border-radius: 20px;
+    box-shadow: var(--lift);
+    background: #fff;
+  }
+
+  .lvm .qr img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: contain;
+  }
+
+  .lvm .scan {
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ash);
+    margin: 20px auto 0;
+    max-width: 32ch;
+  }
+
+  .lvm .clock {
+    display: flex;
+    justify-content: center;
+    margin-top: 14px;
+  }
+
+  .lvm .clock span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lvm .clock i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: lvm-blink 1.6s ease-in-out infinite;
+  }
+
+  .lvm .pay .err {
+    margin-top: 24px;
+  }
+
+  .lvm .facts {
+    margin-top: 26px;
+    border-top: 1px solid var(--hair);
+  }
+
+  .lvm .facts div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .lvm .facts dt {
+    font-size: 14px;
+    color: var(--ash);
+    flex: none;
+  }
+
+  .lvm .facts dd {
+    font-size: 15px;
+    font-weight: 600;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .lvm .pay .btn {
+    margin-top: 22px;
+  }
+
   /* ---------- in-page jumps (document.startViewTransition) ---------- */
   ::view-transition-old(root) {
     animation: lvm-out 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -1270,6 +1702,25 @@
   }
 }
 
+@keyframes lvm-settle-in {
+  from {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes lvm-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes lvm-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
 @media (max-width: 768px) and (prefers-reduced-motion: reduce) {
   .lvm .mask > span,
   .lvm .reveal,
@@ -1310,5 +1761,11 @@
   .lvm .moment .ph img,
   .lvm .place .ph img {
     transition: none;
+  }
+
+  .lvm .bk-photo img,
+  .lvm .pay,
+  .lvm .clock i {
+    animation: none;
   }
 }
