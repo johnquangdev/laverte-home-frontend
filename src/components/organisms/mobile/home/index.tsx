@@ -27,6 +27,16 @@ export const MobileHome: FC = () => {
 
   useReveal(rootRef, area);
 
+  // The site-wide useScrollToTop resets every page entry to the top, which
+  // undoes the browser's own jump to a #fragment on a full load. Only the
+  // phone's m- anchors are restored, so desktop deep links behave as before.
+  useEffect(() => {
+    if (!location.hash.startsWith("#m-")) return;
+    document
+      .getElementById(location.hash.slice(1))
+      ?.scrollIntoView({ behavior: "instant" });
+  }, []);
+
   useEffect(() => {
     const watch = (
       el: Element | null,
