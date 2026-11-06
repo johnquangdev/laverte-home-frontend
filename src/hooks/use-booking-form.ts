@@ -13,7 +13,17 @@ export const BOOKING_TYPES: { value: BookingType; label: string }[] = [
   { value: "day", label: "Theo ngày" },
 ];
 
-export const useBookingForm = (defaultHomeId?: number) => {
+type Options = {
+  // Pick the first home when none is chosen. Off when the page already names a
+  // place the guest tapped but that place isn't tied to an API home yet:
+  // silently selecting some other home would book a room the page never showed.
+  autoselect?: boolean;
+};
+
+export const useBookingForm = (
+  defaultHomeId?: number,
+  { autoselect = true }: Options = {}
+) => {
   const today = dayjs().format("YYYY-MM-DD");
   const homesQuery = useHomesQuery();
   const [homeId, setHomeId] = useState<string>(
@@ -57,9 +67,9 @@ export const useBookingForm = (defaultHomeId?: number) => {
   );
 
   useEffect(() => {
-    if (homeId || !homesQuery.data?.length) return;
+    if (!autoselect || homeId || !homesQuery.data?.length) return;
     setHomeId(String(homesQuery.data[0].id));
-  }, [homeId, homesQuery.data]);
+  }, [autoselect, homeId, homesQuery.data]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();

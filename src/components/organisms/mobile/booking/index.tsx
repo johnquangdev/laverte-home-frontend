@@ -20,7 +20,9 @@ const FORM_ID = "lvm-book-form";
 export const MobileBooking: FC<Props> = ({ defaultHomeId, stayKey }) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const stay = findStay(stayKey);
-  const form = useBookingForm(defaultHomeId ?? stay?.homeId);
+  const form = useBookingForm(defaultHomeId ?? stay?.homeId, {
+    autoselect: !stay,
+  });
   const { homesQuery, selectedHome, result } = form;
 
   useReveal(rootRef, result ? "pay" : "form");
@@ -115,6 +117,11 @@ export const MobileBooking: FC<Props> = ({ defaultHomeId, stayKey }) => {
                       value={form.homeId}
                       onChange={(e) => form.setHomeId(e.target.value)}
                     >
+                      {form.homeId ? null : (
+                        <option value="" disabled>
+                          Chọn phòng…
+                        </option>
+                      )}
                       {homes.map((home) => (
                         <option key={home.id} value={home.id}>
                           {home.name}
@@ -205,7 +212,9 @@ export const MobileBooking: FC<Props> = ({ defaultHomeId, stayKey }) => {
 
                 <div aria-live="polite">
                   <p className="q">Khung giờ đã kín trong những ngày này</p>
-                  {form.availability.isLoading ? (
+                  {!form.homeId ? (
+                    <p className="free">Chọn phòng để xem lịch trống.</p>
+                  ) : form.availability.isLoading ? (
                     <p className="free">Đang kiểm tra lịch…</p>
                   ) : form.busy.length === 0 ? (
                     <p className="free">
