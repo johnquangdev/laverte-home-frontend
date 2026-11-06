@@ -4,8 +4,11 @@ import { GlobalConfigs } from "@/components/organisms/common/global-configs";
 import { ChatButton } from "@/components/organisms/laverte/chat-button";
 import { SiteFooter } from "@/components/organisms/laverte/site-footer";
 import { SiteHeader } from "@/components/organisms/laverte/site-header";
+import { MobileFooter } from "@/components/organisms/mobile/footer";
+import { MobileTopBar } from "@/components/organisms/mobile/top-bar";
 
 import "./laverte.css";
+import "./mobile.css";
 
 type Props = {
   children: ReactNode;
@@ -26,10 +29,17 @@ const DefaultLayout: FC<Props> = ({ children }) => {
         rel="stylesheet"
       />
       <GlobalConfigs />
-      <SiteHeader />
+      {/* .lvd = desktop only, the Mobile* parts are phone only (mobile.css). */}
+      <div className="lvd">
+        <SiteHeader />
+      </div>
+      <MobileTopBar />
       <main id="top">{children}</main>
-      <SiteFooter />
-      <ChatButton />
+      <div className="lvd">
+        <SiteFooter />
+        <ChatButton />
+      </div>
+      <MobileFooter />
     </>
   );
 };
